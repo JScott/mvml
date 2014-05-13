@@ -8,5 +8,5 @@ I blatantly stole the 3DML name from Michael Powers and company. The old way of 
 
 ```
 cd ansible
-ansible-playbook -i hosts server.yml
+sudo ansible-playbook -i hosts server.yml
 ```
