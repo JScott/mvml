@@ -4,17 +4,20 @@ title: Hello world!
 scene:
   #https://github.com/ioquatix/collada
   #- model: models/Rock1.dae
-  #  position: 2,0,-6
+  #  position: '2,0,-6'
   #  id: myrock
   - model: box
-    position: -2, 0, 6
+    position: '-2, 0, 6'
+    scale: '2,2,4'
     id: mybox
   - model: plane
-    position: 0,0,0
+    scale: '10,10'
+    rotation: '-90,0,0'
+    texture: images/checkerboard.jpg
   #- model: models/cobblestone.obj
   #  scale: 4
   - light: point
-    position: -1,1,3
+    position: '-1,1,3'
   - audio: audio/rainforest.mp3
     volume: 0.5
     #range: 
