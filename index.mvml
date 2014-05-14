@@ -1,15 +1,16 @@
-%3DML 1.0
 ---
 title: Hello world!
 #skybox: textures/sky.jpg
 scene:
   #https://github.com/ioquatix/collada
-  - model: models/Rock1.dae
-    position: 2,0,-6
-    id: myrock
+  #- model: models/Rock1.dae
+  #  position: 2,0,-6
+  #  id: myrock
   - model: box
     position: -2, 0, 6
     id: mybox
+  - model: plane
+    position: 0,0,0
   #- model: models/cobblestone.obj
   #  scale: 4
   - light: point
