@@ -33,3 +33,5 @@ Visit yourdomain.com to see index.mvml. Visit yourdomain.com/raw to see index.mv
 cd ansible
 sudo ansible-playbook -i hosts server.yml
 ```-->
+
+[![Build Status](https://secure.travis-ci.org/JScott/mvml.png)](http://travis-ci.org/JScott/mvml)
