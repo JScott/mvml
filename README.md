@@ -34,4 +34,4 @@ cd ansible
 sudo ansible-playbook -i hosts server.yml
 ```-->
 
-[![Build Status](https://secure.travis-ci.org/JScott/mvml.png)](http://travis-ci.org/ngsmrk/comix_scraper)
+[![Build Status](https://secure.travis-ci.org/JScott/mvml.png)](http://travis-ci.org/JScott/mvml)
