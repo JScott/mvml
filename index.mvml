@@ -21,7 +21,7 @@ scene:
 #  - audio: audio/rainforest.mp3
 #    volume: 0.5
 #    range: 10
-#mechanics:
+#behavior:
 #  - rotate: mybox
 #    x: 2
 #    z: 0.4
