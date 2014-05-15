@@ -1,0 +1,10 @@
+---
+title: Hello metaverse!
+scene:
+  - model: box
+    position: '-2, 0, 6'
+    scale: '2,2,4'
+    id: mybox
+  - model: plane
+    scale: '10,10'
+    rotation: '-90,0,0'

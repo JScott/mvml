@@ -9,18 +9,21 @@ require 'yaml'
 #users = db['users'], etc
 
 module MVML
-  attr_accessor :default, :template_path
-  @template_path = 'index.eruby'
-  @default = {
+  @@template_path = 'index.eruby'
+  @@default = {
     :color => "0xffffff",
     :scale => "1,1,1", # providing an extra param to planes...
     :position => "0,0,0",
     :rotation => "0,0,0"
   }
 
+  def self.default
+    @@default
+  end
+
   def self.to_html(file, output_path=nil)
     template = parse file
-    eruby = Erubis::Eruby.new File.read(@template_path)
+    eruby = Erubis::Eruby.new File.read(@@template_path)
     html = eruby.result template
     unless output_path.nil?
       File.open(output_path, 'w') do |file|
@@ -61,7 +64,7 @@ module MVML
   end
 
   def self.convert_rotation(rotation)
-    return @default[:rotation] if rotation.nil?
+    return @@default[:rotation] if rotation.nil?
     rotation = rotation.split ','
     rotation.map! do |rotation| 
       rotation.to_f * Math::PI / 180.0
@@ -72,9 +75,9 @@ module MVML
   def self.new_model(object)
     {
       :render_call => get_render_method(object['model']),
-      :color => object['color'] || @default[:color],
-      :scale => object['scale'] || @default[:scale],
-      :position => object['position'] || @default[:position],
+      :color => object['color'] || @@default[:color],
+      :scale => object['scale'] || @@default[:scale],
+      :position => object['position'] || @@default[:position],
       :rotation => convert_rotation(object['rotation'])
     }
   end

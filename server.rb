@@ -12,5 +12,5 @@ end
 
 get '/raw' do
   content_type 'text/plain'
-  File.read('index.mvml')
+  File.read 'index.mvml'
 end
