@@ -1,5 +1,5 @@
 ---
-title: Hello world!
+title: Hello metaverse!
 #skybox: textures/sky.jpg
 scene:
   #https://github.com/ioquatix/collada
@@ -16,12 +16,12 @@ scene:
     texture: images/checkerboard.jpg
   #- model: models/cobblestone.obj
   #  scale: 4
-  - light: point
-    position: '-1,1,3'
-  - audio: audio/rainforest.mp3
-    volume: 0.5
-    #range: 
-mechanics:
-  - rotate: mybox
-    x: 2
-    z: 0.4
+#  - light: point
+#    position: '-1,1,3'
+#  - audio: audio/rainforest.mp3
+#    volume: 0.5
+#    range: 10
+#mechanics:
+#  - rotate: mybox
+#    x: 2
+#    z: 0.4
