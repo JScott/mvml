@@ -3,7 +3,7 @@ title: Hello metaverse!
 scene:
   - primitive: sphere
   - primitive: box
-    position: (-2, 0, 0)
+    position: (-2, 0, 6)
     scale: (2,2,4)
-    rotation: (0,0,70)
-    color: "#00ff00"
+    rotation: (-90,0,0)
+    color: "#ffffff"

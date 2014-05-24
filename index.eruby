@@ -60,12 +60,13 @@
 
         // SCENE
         var geometry, material;
-        <% for object in objects %>
-        geometry = new THREE.<%= object[:render_call] %>(<%= object[:scale] %>);
-        material = new THREE.MeshLambertMaterial( { color: <%= object[:color] %> } );
+        <% for prim in primitives %>
+        geometry = new THREE.<%= prim[:render_call] %>;
+        material = new THREE.MeshLambertMaterial( { color: '<%= prim[:color] %>' } );
         mesh = new THREE.Mesh( geometry, material );
-        mesh.position.set(<%= object[:position] %>);
-        mesh.rotation.set(<%= object[:rotation] %>);
+        mesh.position.set<%= prim[:position] %>;
+        mesh.rotation.set<%= prim[:rotation] %>;
+        mesh.scale.set<%= prim[:scale] %>;
         scene.add(mesh);
         <% end %>
         /*var floorTexture = new THREE.ImageUtils.loadTexture( 'images/checkerboard.jpg' );
