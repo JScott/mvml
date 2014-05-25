@@ -23,11 +23,11 @@ describe MVML do
       end
       it 'and primitives' do
         subject.should include "primitives"
-        subject['primitives'].count.should equal 3
+        subject['primitives'].count.should be > 0
       end
       it 'and meshes' do
         subject.should include "meshes"
-        subject['meshes'].count.should equal 1
+        subject['meshes'].count.should be > 0
       end
     end
   end
@@ -47,6 +47,17 @@ describe MVML do
       it 'creates a WebGL/three.js HTML' do
         subject.should include '<html lang="en">'
         subject.should =~ /three.*js/
+      end
+      it 'with a title' do
+        subject.should include '<title>'
+      end
+      it 'and one of each primitive' do
+        subject.should include 'BoxGeometry'
+        subject.should include 'SphereGeometry'
+        subject.should include 'PlaneGeometry'
+      end
+      it 'and an invader mesh' do
+        subject.should include 'models/invader.obj.js'
       end
     end
   end
