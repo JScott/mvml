@@ -23,7 +23,11 @@ describe MVML do
       end
       it 'populates primitives' do
         subject.should include "primitives"
-        subject['primitives'].count.should equal 2
+        subject['primitives'].count.should equal 3
+      end
+      it 'populates meshes' do
+        subject.should include "meshes"
+        subject['meshes'].count.should equal 2
       end
     end
   end

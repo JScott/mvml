@@ -14,7 +14,8 @@ module MVML
     :color => "#ffffff",
     :scale => "(1,1,1)",
     :position => "(0,0,0)",
-    :rotation => "(0,0,0)"
+    :rotation => "(0,0,0)",
+    :texture => nil
   }
 
   def self.default
@@ -50,6 +51,7 @@ module MVML
       #template['audio'].push(new_audio(object)) if object.has_key? 'audio'
     end
     lists.each { |name| template[name].compact! }
+    puts "TEMPLATE:\n#{template}"
     return template
   end
 
@@ -58,8 +60,10 @@ module MVML
     case model
     when 'box'
       "BoxGeometry(1,1,1)"
-    when 'sphere' 
+    when 'sphere'
       "SphereGeometry(1)"
+    when 'plane'
+      "PlaneGeometry(1,1)"
     else
       "BoxGeometry(1,1,1)"
     end
@@ -73,7 +77,7 @@ module MVML
     "(#{ rotation.join ',' })"
   end
 
-  def self.new_mesh(object)
+  def self.new_model(object)
     rotation = @@default[:rotation]
     unless object['rotation'].nil?
       rotation = convert_rotation object['rotation']
@@ -82,14 +86,21 @@ module MVML
       :color => object['color'] || @@default[:color],
       :scale => object['scale'] || @@default[:scale],
       :position => object['position'] || @@default[:position],
-      :rotation => rotation
+      :rotation => rotation,
+      :texture => object['texture'] || @@default[:texture]
     }
   end
 
+  def self.new_mesh(object)
+    {
+      :path => object['mesh']
+    }.merge new_model(object)
+  end
+
   def self.new_primitive(object)
-    new_mesh(object).merge({
+    {
       :render_call => get_render_method(object['primitive']) 
-    })
+    }.merge new_model(object)
   end
 
   def self.new_light(object)

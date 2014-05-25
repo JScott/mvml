@@ -2,8 +2,21 @@
 title: Hello metaverse!
 scene:
   - primitive: sphere
+
   - primitive: box
-    position: (-2, 0, 0)
+    position: (-3, 1, 0)
     scale: (2,2,4)
-    rotation: (0,0,70)
-    color: "#00ff00"
+    rotation: (0,-30,0)
+    color: "#00ffff"
+
+    # plane to be replaced by meshes in the future
+    # too many unique cases (i.e. scaling, facing)
+  - primitive: plane
+    position: (0,-2, 0)
+    scale: (20,20,1)
+    rotation: (-90,0,0)
+    texture: images/grass.jpg
+
+  - mesh: models/invader.obj.js
+    position: (5,0,0)
+    scale: (0.05, 0.05, 0.05)

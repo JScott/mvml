@@ -3,7 +3,9 @@ title: Hello metaverse!
 scene:
   - primitive: sphere
   - primitive: box
-    position: (-2, 0, 6)
+    position: (-2, 2, 0)
     scale: (2,2,4)
-    rotation: (-90,0,0)
-    color: "#ffffff"
+    rotation: (0,-30,0)
+    color: "#00ff00"
+  - mesh: models/cobblestone.obj.js
+    position: (0,-3,0)

@@ -19,7 +19,7 @@
       var keyboard = new KeyboardState();
       var clock = new THREE.Clock();
 
-      var mesh;
+      var obj;
 
       init();
       animate();
@@ -59,15 +59,41 @@
 
 
         // SCENE
+        var manager = new THREE.LoadingManager();
         var geometry, material;
         <% for prim in primitives %>
         geometry = new THREE.<%= prim[:render_call] %>;
-        material = new THREE.MeshLambertMaterial( { color: '<%= prim[:color] %>' } );
-        mesh = new THREE.Mesh( geometry, material );
-        mesh.position.set<%= prim[:position] %>;
-        mesh.rotation.set<%= prim[:rotation] %>;
-        mesh.scale.set<%= prim[:scale] %>;
-        scene.add(mesh);
+        material = new THREE.MeshLambertMaterial({
+          <% if prim[:texture].nil? %>
+          color: '<%= prim[:color] %>'
+          <% else %>
+          map: THREE.ImageUtils.loadTexture('<%= prim[:texture] %>')
+          <% end %>
+        });
+        obj = new THREE.Mesh(geometry, material);
+        obj.position.set<%= prim[:position] %>;
+        obj.rotation.set<%= prim[:rotation] %>;
+        obj.scale.set<%= prim[:scale] %>;
+        scene.add(obj);
+        <% end %>
+        <% unless meshes.empty? %>
+        var loader = new THREE.JSONLoader(); 
+        <% for mesh in meshes %>
+        loader.load('<%= mesh[:path] %>', function (geometry) {
+          material = new THREE.MeshLambertMaterial({
+            <% if mesh[:texture].nil? %>
+            color: '<%= mesh[:color] %>'
+            <% else %>
+            map: THREE.ImageUtils.loadTexture('<%= mesh[:texture] %>')
+            <% end %>
+          });
+          obj = new THREE.Mesh(geometry,material);
+          obj.position.set<%= mesh[:position] %>;
+          obj.rotation.set<%= mesh[:rotation] %>;
+          obj.scale.set<%= mesh[:scale] %>;
+          scene.add(obj);
+        });
+        <% end %>
         <% end %>
         /*var floorTexture = new THREE.ImageUtils.loadTexture( 'images/checkerboard.jpg' );
         floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping; 
