@@ -2,10 +2,20 @@
 title: Hello metaverse!
 scene:
   - primitive: sphere
+
   - primitive: box
-    position: (-2, 2, 0)
+    position: (-4, 1, 0)
     scale: (2,2,4)
     rotation: (0,-30,0)
-    color: "#00ff00"
-  - mesh: models/cobblestone.obj.js
-    position: (0,-3,0)
+    color: 0x00ffff
+
+  - primitive: plane
+    position: (0,-2, 0)
+    scale: (20,20,1)
+    rotation: (-90,0,0)
+    texture: images/grass.jpg
+
+  - mesh: models/invader.obj.js
+    position: (5,0,0)
+    scale: (0.05, 0.05, 0.05)
+    color: red

@@ -48,9 +48,14 @@
         // CONTROLS
         controls = new THREE.OrbitControls( camera, renderer.domElement );
         // LIGHT
-        var light = new THREE.PointLight(0xffffff);
-        light.position.set(1,2.5,1);
+        var light = new THREE.AmbientLight( "#404040" );
         scene.add(light);
+        light = new THREE.DirectionalLight( "white", 0.25 );
+        light.position.set(1,1,2);
+        scene.add(light);
+        //light = new THREE.PointLight(0xffffff);
+        //light.position.set(1,2.5,1);
+        //scene.add(light);
         // SKYBOX
         var skyBoxGeometry = new THREE.BoxGeometry( 10000, 10000, 10000 );
         var skyBoxMaterial = new THREE.MeshBasicMaterial( { color: 0x9999ff, side: THREE.BackSide } );
@@ -65,7 +70,7 @@
         geometry = new THREE.<%= prim[:render_call] %>;
         material = new THREE.MeshLambertMaterial({
           <% if prim[:texture].nil? %>
-          color: '<%= prim[:color] %>'
+          color: <%= prim[:color] %>
           <% else %>
           map: THREE.ImageUtils.loadTexture('<%= prim[:texture] %>')
           <% end %>
@@ -82,7 +87,7 @@
         loader.load('<%= mesh[:path] %>', function (geometry) {
           material = new THREE.MeshLambertMaterial({
             <% if mesh[:texture].nil? %>
-            color: '<%= mesh[:color] %>'
+            color: <%= mesh[:color] %>
             <% else %>
             map: THREE.ImageUtils.loadTexture('<%= mesh[:texture] %>')
             <% end %>
