@@ -1,17 +1,11 @@
 #!/usr/bin/env ruby
 require 'erubis'
 require 'yaml'
-#require 'mongo'
-#client = MongoClient.new
-#db = client['3dml']
-#spaces = db['spaces']
-
-#users = db['users'], etc
 
 module MVML
   @@eruby_path = 'index.eruby'
   @@default = {
-    :color => "#ffffff",
+    :color => 0xffffff,
     :scale => "(1,1,1)",
     :position => "(0,0,0)",
     :rotation => "(0,0,0)",
@@ -51,7 +45,6 @@ module MVML
       #template['audio'].push(new_audio(object)) if object.has_key? 'audio'
     end
     lists.each { |name| template[name].compact! }
-    puts "TEMPLATE:\n#{template}"
     return template
   end
 
@@ -79,11 +72,11 @@ module MVML
 
   def self.new_model(object)
     rotation = @@default[:rotation]
-    unless object['rotation'].nil?
-      rotation = convert_rotation object['rotation']
-    end 
+    rotation = convert_rotation object['rotation'] unless object['rotation'].nil?
+    color = object['color']
+    color = "\'#{color}\'" if color.class == String
     {
-      :color => object['color'] || @@default[:color],
+      :color => color || @@default[:color],
       :scale => object['scale'] || @@default[:scale],
       :position => object['position'] || @@default[:position],
       :rotation => rotation,
