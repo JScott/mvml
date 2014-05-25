@@ -18,16 +18,16 @@ describe MVML do
       it 'returns a templating hash' do
         subject.class.should equal Hash
       end
-      it 'populates a title' do
+      it 'with a title' do
         subject.should include "title"
       end
-      it 'populates primitives' do
+      it 'and primitives' do
         subject.should include "primitives"
         subject['primitives'].count.should equal 3
       end
-      it 'populates meshes' do
+      it 'and meshes' do
         subject.should include "meshes"
-        subject['meshes'].count.should equal 2
+        subject['meshes'].count.should equal 1
       end
     end
   end
@@ -35,7 +35,7 @@ describe MVML do
   describe '.read' do
     context 'MVML spec' do
       subject { MVML.read spec }
-      it 'represented in a Hash' do
+      it 'creates a Hash' do
         subject.class.should equal Hash
       end
     end
@@ -44,7 +44,7 @@ describe MVML do
   describe '.to_html' do
     context 'MVML spec' do
       subject { MVML.to_html spec }
-      it 'returns WebGL HTML' do
+      it 'creates a WebGL/three.js HTML' do
         subject.should include '<html lang="en">'
         subject.should =~ /three.*js/
       end
