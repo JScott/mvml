@@ -170,12 +170,13 @@ THREE.FlyControls = function ( object, domElement ) {
     event.preventDefault();
     event.stopPropagation();
 
-    if ( this.dragToLook && event.targetTouches.length <= 0 ) {
-      this.moveState.yawLeft = this.moveState.pitchDown = this.moveState.forward = 0;
-    }
-
-    this.updateMovementVector();
+    this.moveState.yawLeft = this.moveState.pitchDown = this.moveState.forward = 0;
     this.updateRotationVector();
+
+    var touch = event.targetTouches[0];
+    this.firstTouch.x = touch.pageX;
+    this.firstTouch.y = touch.pageY;
+    this.updateMovementVector();
   };
 
   this.mousedown = function( event ) {
