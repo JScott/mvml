@@ -130,15 +130,6 @@ THREE.FlyControls = function ( object, domElement ) {
     //document.getElementById('info').innerHTML = event.targetTouches.length;
 
     if ( event.targetTouches.length == 1 ) {
-      this.moveState.yawLeft = 0;
-      this.moveState.pitchDown = 0;
-      this.updateRotationVector();
-     
-      this.moveState.back = 0;
-      this.moveState.forward = 1;
-      this.updateMovementVector();
-    }
-    else if ( event.targetTouches.length == 2 ) {
       this.moveState.back = 0;
       this.moveState.forward = 0;
       this.updateMovementVector();
@@ -152,6 +143,15 @@ THREE.FlyControls = function ( object, domElement ) {
       this.moveState.pitchDown = - (this.firstTouch.y - touch.pageY) / halfHeight;
 
       this.updateRotationVector();
+    }
+    else if ( event.targetTouches.length == 2 ) {
+      this.moveState.yawLeft = 0;
+      this.moveState.pitchDown = 0;
+      this.updateRotationVector();
+     
+      this.moveState.back = 0;
+      this.moveState.forward = 1;
+      this.updateMovementVector();
     }
     else if ( event.targetTouches.length >= 2 ) {
       this.moveState.yawLeft = 0;
