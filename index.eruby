@@ -41,13 +41,15 @@
         scene = new THREE.Scene();
 
         // CAMERA
+        var player_height = 5;
         var fov = 45;
         var aspect = SCREEN_WIDTH/SCREEN_HEIGHT;
         var near = 0.1;
         var far = 20000;
         camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
         scene.add(camera);
-        camera.position.set(0,5,30);
+        camera.position.set<%= start_position %>;
+        camera.position.y += player_height;
 
         // CONTROLS
         controls = new THREE.FlyControls( camera );

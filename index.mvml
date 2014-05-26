@@ -1,9 +1,10 @@
 ---
 title: Hello metaverse!
 motd: READY PLAYER ONE
-rules:
+player:
   move_speed: 15
   turn_speed: 1.5
+  start: (0,0,30)
 scene:
   - primitive: sphere
 
