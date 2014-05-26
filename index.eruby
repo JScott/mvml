@@ -8,8 +8,8 @@
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/three.js/r67/three.min.js"></script>
     <script src="js/Detector.js"></script>
-    <script src="js/FlyControls.js"></script>
     <script src="js/THREEx/KeyboardState.js"></script>
+    <script src="js/FlyControls.js"></script>
   </head>
 
   <body>
@@ -140,7 +140,7 @@
       function animate() {
         requestAnimationFrame( animate );
         render();
-        input();
+        //input();
       };
 
       function render() {
@@ -148,7 +148,7 @@
         renderer.render( scene, camera );
       };
 
-      function input() {
+      /*function input() {
         controls.moveState.forward = keyboard.pressed("w");
         controls.moveState.back = keyboard.pressed("s");
         controls.moveState.left = keyboard.pressed("a");
@@ -162,12 +162,12 @@
         controls.updateMovementVector();
         controls.updateRotationVector();
 
-        //case 82: /*R*/ controls.moveState.up = 1; break;
-        //case 70: /*F*/ controls.moveState.down = 1; break;
+        //case 82: controls.moveState.up = 1; break; //R
+        //case 70: controls.moveState.down = 1; break; //F
         //controls.movementSpeedMultiplier = .1;
-        //case 81: /*Q*/ controls.moveState.rollLeft = 1; break;
-        //case 69: /*E*/ controls.moveState.rollRight = 1; break;
-      }
+        //case 81: controls.moveState.rollLeft = 1; break; //Q
+        //case 69: controls.moveState.rollRight = 1; break; //E
+      }*/
     </script>
   </body>
 </html>
