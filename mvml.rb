@@ -10,7 +10,7 @@ module MVML
 
     :move_speed => 15,
     :turn_speed => 1.5,
-    :start_position => "(0,0,0)",
+    :start => "(0,0,0)",
 
     :color => 0xffffff,
     :scale => "(1,1,1)",
@@ -56,14 +56,20 @@ module MVML
     lists.each { |name| template[name].compact! }
 
     if mvml['player'].nil?
-      template['move_speed'] = @@default[:move_speed]
-      template['turn_speed'] = @@default[:turn_speed]
-      template['start_position'] = @@default[:start_position]
+      template['player'] = {
+        'move_speed' => @@default[:move_speed],
+        'turn_speed' => @@default[:turn_speed],
+        'start' => @@default[:start_position]
+      }
     else
-      template['move_speed'] = mvml['player']['move_speed'] || @@default[:move_speed]
-      template['turn_speed'] = mvml['player']['turn_speed'] || @@default[:turn_speed]
-      template['start_position'] = mvml['player']['start'] || @@default[:start_position]
+      template['player'] = {
+        'move_speed' => mvml['player']['move_speed'] || @@default[:move_speed],
+        'turn_speed' => mvml['player']['turn_speed'] || @@default[:turn_speed],
+        'start' => mvml['player']['start'] || @@default[:start]
+      }
     end
+
+    puts template
 
     return template
   end

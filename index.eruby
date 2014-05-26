@@ -15,7 +15,7 @@
   <body>
 
     <div id="info"><br/><%= motd %><br/><br/>
-    Desktop: <b>WASD</b> move, <b>mouse|arrow</b> pan<br/>
+    Desktop: <b>WASD</b> move, <b>mouse|arrow</b> look<br/>
     Touch: <b>1 finger</b> forward, <b>2</b> pan, <b>3</b> backward<br/>
     </div>
 
@@ -49,14 +49,14 @@
         var far = 20000;
         camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
         scene.add(camera);
-        camera.position.set<%= start_position %>;
+        camera.position.set<%= player['start'] %>;
         camera.position.y += player_height;
 
         // CONTROLS
         controls = new THREE.FlyControls( camera );
         controls.domElement = container;
-        controls.movementSpeed = <%= move_speed %>;
-        controls.rollSpeed = <%= turn_speed %>;
+        controls.movementSpeed = <%= player['move_speed'] %>;
+        controls.rollSpeed = <%= player['turn_speed'] %>;
         controls.autoForward = false;
         controls.dragToLook = true;
 

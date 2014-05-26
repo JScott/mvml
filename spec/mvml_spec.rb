@@ -21,6 +21,13 @@ describe MVML do
       it 'with a title' do
         subject.should include "title"
       end
+      it 'and a message of the day' do
+        subject.should include "motd"
+      end
+      it 'and player rules' do
+        subject.should include "player"
+        subject['player'].count.should be > 0
+      end
       it 'and primitives' do
         subject.should include "primitives"
         subject['primitives'].count.should be > 0
@@ -50,6 +57,11 @@ describe MVML do
       end
       it 'with a title' do
         subject.should include '<title>'
+      end
+      it 'and player rules' do
+        subject.should include "controls.movementSpeed"
+        subject.should include "controls.rollSpeed"
+        subject.should include "camera.position.set"
       end
       it 'and one of each primitive' do
         subject.should include 'BoxGeometry'
