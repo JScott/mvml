@@ -34,11 +34,9 @@
       b { color:orange }
     </style>
     <script src="//cdnjs.cloudflare.com/ajax/libs/three.js/r67/three.min.js"></script>
-
-    <script src="js/FlyControls.js"></script>
-    <script src="js/FirstPersonControls.js"></script>
-
     <script src="js/Detector.js"></script>
+    <script src="js/FlyControls.js"></script>
+    <script src="js/THREEx/KeyboardState.js"></script>
   </head>
 
   <body>
@@ -50,6 +48,7 @@
     <script>   
       var container;
       var camera, controls, scene, renderer;
+      var keyboard = new THREEx.KeyboardState();
 
       var SCREEN_WIDTH = window.innerWidth;
       var SCREEN_HEIGHT = window.innerHeight;
@@ -168,6 +167,7 @@
       function animate() {
         requestAnimationFrame( animate );
         render();
+        input();
       };
 
       function render() {
@@ -175,6 +175,26 @@
         renderer.render( scene, camera );
       };
 
+      function input() {
+        controls.moveState.forward = keyboard.pressed("w");
+        controls.moveState.back = keyboard.pressed("s");
+        controls.moveState.left = keyboard.pressed("a");
+        controls.moveState.right = keyboard.pressed("d");
+
+        controls.moveState.pitchUp = keyboard.pressed("up");
+        controls.moveState.pitchDown = keyboard.pressed("down");
+        controls.moveState.yawLeft = keyboard.pressed("left");
+        controls.moveState.yawRight = keyboard.pressed("right");
+
+        controls.updateMovementVector();
+        controls.updateRotationVector();
+
+        //case 82: /*R*/ controls.moveState.up = 1; break;
+        //case 70: /*F*/ controls.moveState.down = 1; break;
+        //controls.movementSpeedMultiplier = .1;
+        //case 81: /*Q*/ controls.moveState.rollLeft = 1; break;
+        //case 69: /*E*/ controls.moveState.rollRight = 1; break;
+      }
     </script>
   </body>
 </html>
