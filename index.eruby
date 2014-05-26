@@ -52,8 +52,8 @@
         // CONTROLS
         controls = new THREE.FlyControls( camera );
         controls.domElement = container;
-        controls.movementSpeed = 15;
-        controls.rollSpeed = 1.5;
+        controls.movementSpeed = <%= move_speed %>;
+        controls.rollSpeed = <%= turn_speed %>;
         controls.autoForward = false;
         controls.dragToLook = true;
 

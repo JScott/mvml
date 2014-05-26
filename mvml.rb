@@ -5,6 +5,12 @@ require 'yaml'
 module MVML
   @@eruby_path = 'index.eruby'
   @@default = {
+    :title => "MVML space",
+    :motd => "",
+
+    :move_speed => 15,
+    :turn_speed => 1.5,
+
     :color => 0xffffff,
     :scale => "(1,1,1)",
     :position => "(0,0,0)",
@@ -34,9 +40,11 @@ module MVML
 
   def self.parse(file)
     mvml = read file
+    puts mvml
     template = {}
-    template['title'] = mvml['title']
-    template['motd'] = mvml['motd']
+    template['title'] = mvml['title'] || @@default[:title]
+    template['motd'] = mvml['motd'] || @@default[:motd]
+
     lists = ['primitives', 'meshes', 'lights', 'audio']
     lists.each { |name| template[name] = [] }
     mvml['scene'].each do |object|
@@ -46,6 +54,15 @@ module MVML
       #template['audio'].push(new_audio(object)) if object.has_key? 'audio'
     end
     lists.each { |name| template[name].compact! }
+
+    if mvml['rules'].nil?
+      template['move_speed'] = @@default[:move_speed]
+      template['turn_speed'] = @@default[:turn_speed]
+    else
+      template['move_speed'] = mvml['rules']['move_speed'] || @@default[:move_speed]
+      template['turn_speed'] = mvml['rules']['turn_speed'] || @@default[:turn_speed]
+    end
+
     return template
   end
 
