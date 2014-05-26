@@ -1,5 +1,16 @@
 ---
 title: Hello metaverse!
+motd: READY PLAYER ONE
+controls:
+  - forward: w
+  - backward: s
+  - left: a
+  - right: d
+  - jump: space
+rules:
+  - gravity: 9.81
+  - speed: 1.5
+  - collisions: yes
 scene:
   - primitive: sphere
 

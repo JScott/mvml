@@ -36,6 +36,7 @@ module MVML
     mvml = read file
     template = {}
     template['title'] = mvml['title']
+    template['motd'] = mvml['motd']
     lists = ['primitives', 'meshes', 'lights', 'audio']
     lists.each { |name| template[name] = [] }
     mvml['scene'].each do |object|

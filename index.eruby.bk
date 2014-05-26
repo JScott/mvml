@@ -1,102 +1,71 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <title><%= title %></title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    <style>
-      body {
-        background:#000;
-        color: #eee;
-        padding:0;
-        margin:0;
-        font-weight:bold;
-        overflow:hidden;
-
-        font-family:Monospace;
-        font-size:13px;
-        text-align:center;
-      }
-
-      #info {
-        position: absolute;
-        top: 0px; width: 100%;
-        padding: 5px;
-        z-index:100;
-      }
-
-      a {
-
-        color: #0080ff;
-      }
-
-      b { color:orange }
-    </style>
     <script src="//cdnjs.cloudflare.com/ajax/libs/three.js/r67/three.min.js"></script>
-
-    <script src="js/FlyControls.js"></script>
-    <script src="js/FirstPersonControls.js"></script>
-
+    <!--<script src="js/RequestAnimationFrame.js"></script>-->
     <script src="js/Detector.js"></script>
+    <script src="js/FirstPersonControls.js"></script>
+    <script src="js/KeyboardState.js"></script>
+    <script src="js/THREEx.FullScreen.js"></script>
   </head>
-
   <body>
-
-    <div id="info"><br/><%= motd %><br/><br/>
-    <b>WASD</b> move, <b>mouse|arrow</b> look around<br/>
-    </div>
-
-    <script>   
-      var container;
-      var camera, controls, scene, renderer;
-
-      var SCREEN_WIDTH = window.innerWidth;
-      var SCREEN_HEIGHT = window.innerHeight;
-      var SCREEN_ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT;
-
+    <div id="ThreeJS" style="position: absolute; left:0px; top:0px"></div>
+    <script>
+      var container, scene, camera, renderer, controls;
+      var keyboard = new KeyboardState();
       var clock = new THREE.Clock();
+
+      var obj;
 
       init();
       animate();
-
-      function init() {
-        // CONTAINER
-        container = document.createElement( 'div' );
-        document.body.appendChild( container );
-
+      function init() 
+      {
         // SCENE
         scene = new THREE.Scene();
-
         // CAMERA
-        var fov = 45;
-        var aspect = SCREEN_WIDTH/SCREEN_HEIGHT;
-        var near = 0.1;
-        var far = 20000;
-        camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+        var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
+        var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 20000;
+        camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
         scene.add(camera);
         camera.position.set(0,5,30);
-
+        camera.lookAt(0,5,31);//scene.position);  
+        // RENDERER
+        if ( Detector.webgl ) {
+          renderer = new THREE.WebGLRenderer( {antialias:true} );
+        }
+        else {
+          renderer = new THREE.CanvasRenderer(); 
+        }
+        renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+        container = document.getElementById( 'ThreeJS' );
+        container.appendChild( renderer.domElement );
+        // EVENTS
+        THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
         // CONTROLS
-        controls = new THREE.FlyControls( camera );
-        controls.domElement = container;
-        controls.movementSpeed = 15;
-        controls.rollSpeed = 1.5;
-        controls.autoForward = false;
-        controls.dragToLook = true;
-
+        controls = new THREE.FirstPersonControls( camera, renderer.domElement );
+        //controls.movementSpeed = 70;
+        //controls.lookSpeed = 0.05;
+        //controls.noFly = true;
+        //controls.lookVertical = false;
         // LIGHT
         var light = new THREE.AmbientLight( "#404040" );
         scene.add(light);
         light = new THREE.DirectionalLight( "white", 0.25 );
         light.position.set(1,1,2);
         scene.add(light);
-
+        //light = new THREE.PointLight(0xffffff);
+        //light.position.set(1,2.5,1);
+        //scene.add(light);
         // SKYBOX
         var skyBoxGeometry = new THREE.BoxGeometry( 10000, 10000, 10000 );
         var skyBoxMaterial = new THREE.MeshBasicMaterial( { color: 0x9999ff, side: THREE.BackSide } );
         var skyBox = new THREE.Mesh( skyBoxGeometry, skyBoxMaterial );
         scene.add(skyBox);
+
 
         // SCENE
         var manager = new THREE.LoadingManager();
@@ -139,42 +108,37 @@
         floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping; 
         floorTexture.repeat.set( 10, 10 );
         var floorMaterial = new THREE.MeshBasicMaterial( { map: floorTexture, side: THREE.DoubleSide } );*/
+      }
 
-        // RENDERER
-        if ( Detector.webgl ) {
-          renderer = new THREE.WebGLRenderer( {antialias:true} );
-        }
-        else {
-          renderer = new THREE.CanvasRenderer(); 
-        }
-        renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
-        container.appendChild( renderer.domElement );
-
-        // EVENTS
-        //THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
-        window.addEventListener( 'resize', onWindowResize, false );
-      };
-
-      function onWindowResize( event ) {
-        SCREEN_HEIGHT = window.innerHeight;
-        SCREEN_WIDTH  = window.innerWidth;
-
-        renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
-
-        camera.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
-        camera.updateProjectionMatrix();
-      };
-
-      function animate() {
+      function animate() 
+      {
         requestAnimationFrame( animate );
-        render();
-      };
+        render();   
+        update();
+      }
 
-      function render() {
+      function update()
+      {
+        if ( keyboard.pressed("z") ) 
+        {   
+          // do something
+        }
+      }
+
+      function render() 
+      {
+        //controls.movementSpeed = 0.33;
         controls.update( clock.getDelta() );
         renderer.render( scene, camera );
-      };
+      }
 
+      function onWindowResize()
+      {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        controls.handleResize();
+      }
     </script>
   </body>
 </html>
