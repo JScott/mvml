@@ -15,7 +15,8 @@
   <body>
 
     <div id="info"><br/><%= motd %><br/><br/>
-    <b>WASD</b> move, <b>mouse|arrow</b> look around<br/>
+    Desktop: <b>WASD</b> move, <b>mouse|arrow</b> pan<br/>
+    Touch: <b>1 finger</b> forward, <b>2</b> pan, <b>3</b> backward<br/>
     </div>
 
     <script>   

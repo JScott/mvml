@@ -41,7 +41,6 @@ module MVML
 
   def self.parse(file)
     mvml = read file
-    puts mvml
     template = {}
     template['title'] = mvml['title'] || @@default[:title]
     template['motd'] = mvml['motd'] || @@default[:motd]
