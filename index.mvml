@@ -1,6 +1,6 @@
 ---
 title: Hello metaverse!
-motd: READY PLAYER ONE
+motd: Rendered from <a href="http://mvml.jvscott.net/raw">this markup</a>
 player:
   move_speed: 15
   turn_speed: 1.5
