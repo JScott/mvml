@@ -2,9 +2,10 @@
  * @author James Baicoianu / http://www.baicoianu.com/
  */
 
-THREE.FlyControls = function ( object, domElement ) {
+THREE.FlyControls = function ( camera, mesh, domElement ) {
 
-  this.object = object;
+  this.camera = camera;
+  this.mesh = mesh;
 
   this.domElement = ( domElement !== undefined ) ? domElement : document;
   if ( domElement ) this.domElement.setAttribute( 'tabindex', -1 );
@@ -242,44 +243,40 @@ THREE.FlyControls = function ( object, domElement ) {
     movement.normalize().multiplyScalar(moveMult);
 
     //if (clock.elapsedTime % 1 < 0.01) console.log(movement);
-    this.object.position.add(movement);
+    this.camera.position.add(movement);
+    this.mesh.position.add(movement);
+    //this.mesh.position = this.camera.position;
 
-    //this.object.rotation.x += this.rotationVector.x * rotMult;
-    //this.object.rotation.y += this.rotationVector.y * rotMult;
-    //this.object.rotation.z += this.rotationVector.z * rotMult;
-
-    //if (clock.elapsedTime % 1 < 0.01) console.log(this.lookVector);
+    //if (clock.elapsedTime % 1 < 0.01) console.log(this.camera.position);
+    //if (clock.elapsedTime % 1 < 0.01) console.log(this.mesh);
 
     var matrix = new THREE.Matrix4().makeRotationAxis(right, this.rotationVector.y * rotMult);
     this.lookVector.applyMatrix4(matrix);
     matrix = new THREE.Matrix4().makeRotationY(this.rotationVector.x * rotMult);
     this.lookVector.applyMatrix4(matrix);
 
-    var lookTarget = this.lookVector.clone();
-    this.object.lookAt(lookTarget.add(this.object.position));
-    //this.object.lookAt(this.lookVector.add(this.object.position));
+    this.camera.lookAt(this.lookVector.clone().add(this.camera.position));
   };
 
   this.updateMovementVector = function() {
-
     var forward = ( this.moveState.forward || ( this.autoForward && !this.moveState.back ) ) ? 1 : 0;
+
+    // collision detection
+    // TODO
 
     this.moveVector.x = ( -this.moveState.left    + this.moveState.right );
     this.moveVector.y = ( -this.moveState.down    + this.moveState.up );
     this.moveVector.z = ( -forward + this.moveState.back );
 
     //console.log( 'move:', [ this.moveVector.x, this.moveVector.y, this.moveVector.z ] );
-
   };
 
   this.updateRotationVector = function() {
-
     this.rotationVector.y = ( -this.moveState.pitchDown + this.moveState.pitchUp );
     this.rotationVector.x = ( -this.moveState.yawRight  + this.moveState.yawLeft );
     this.rotationVector.z = ( -this.moveState.rollRight + this.moveState.rollLeft );
 
     //console.log( 'rotate:', [ this.rotationVector.x, this.rotationVector.y, this.rotationVector.z ] );
-
   };
 
   this.getContainerDimensions = function() {
