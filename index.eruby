@@ -132,7 +132,6 @@
         controls.movementSpeed = <%= player['move_speed'] %>;
         controls.rollSpeed = <%= player['turn_speed'] %>;
         controls.autoForward = false;
-        controls.dragToLook = true;
 
         // EVENTS
         //THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
