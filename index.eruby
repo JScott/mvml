@@ -109,6 +109,7 @@
         player_mesh = new THREE.Mesh(geometry, material);
         player_mesh.position.set<%= player['start'] %>;
         player_mesh.position.y += player_height/2.0;
+        player_mesh.visible = false;
         scene.add(player_mesh);
         /*var floorTexture = new THREE.ImageUtils.loadTexture( 'images/checkerboard.jpg' );
         floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping; 
