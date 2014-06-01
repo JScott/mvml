@@ -2,13 +2,13 @@
  * @author James Baicoianu / http://www.baicoianu.com/
  */
 
-THREE.FlyControls = function ( camera, mesh, domElement ) {
+THREE.FlyControls = function ( camera, mesh, collision_commander ) {
 
   this.camera = camera;
   this.mesh = mesh;
+  this.collision = collision_commander;
 
-  this.domElement = ( domElement !== undefined ) ? domElement : document;
-  if ( domElement ) this.domElement.setAttribute( 'tabindex', -1 );
+  this.domElement = document;
 
   // API
 
@@ -220,6 +220,11 @@ THREE.FlyControls = function ( camera, mesh, domElement ) {
     movement.add( forward.multiplyScalar(-this.moveVector.z) );
     movement.normalize().multiplyScalar(moveMult);
 
+    var distance = this.collision.distance( this.mesh, movement );
+    if (distance > 0) {
+      movement.normalize().multiplyScalar(distance - collision.theta);
+    }
+
     //if (clock.elapsedTime % 1 < 0.01) console.log(movement);
     this.camera.position.add(movement);
     this.mesh.position.add(movement);
@@ -232,34 +237,12 @@ THREE.FlyControls = function ( camera, mesh, domElement ) {
     this.camera.lookAt(this.lookVector.clone().add(this.camera.position));
   };
 
-  /*this.checkForCollision = function() {
-    // this.moveVector
-    // this.mesh
-
-    for (var vertexIndex = 0; vertexIndex < mesh.geometry.vertices.length; vertexIndex++)
-    {   
-      var localVertex = mesh.geometry.vertices[vertexIndex].clone();
-      var globalVertex = localVertex.applyMatrix4( mesh.matrix );
-      var directionVector = globalVertex.sub( mesh.position );
-      
-      var ray = new THREE.Raycaster( mesh.position.clone(), directionVector.clone().normalize() );
-      var collisionResults = ray.intersectObjects( TODO:SCENE );
-      if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) {
-          document.getElementById('info').innerHTML = 'hi';
-      } 
-    }
-    //var ray = new THREE.Raycaster( mesh.position, );
-  }*/
-
   this.updateMovementVector = function() {
     var forward = ( this.moveState.forward || ( this.autoForward && !this.moveState.back ) ) ? 1 : 0;
 
     this.moveVector.x = ( -this.moveState.left    + this.moveState.right );
     this.moveVector.y = ( -this.moveState.down    + this.moveState.up );
     this.moveVector.z = ( -forward + this.moveState.back );
-
-    // collision detection
-    //this.checkForCollision();
 
     //console.log( 'move:', [ this.moveVector.x, this.moveVector.y, this.moveVector.z ] );
   };
