@@ -4,7 +4,7 @@ require './mvml'
 
 set :public, 'webroot'
 set :bind, '0.0.0.0'
-set :port, 80
+set :port, ARGV[0] || 80
 
 get '/' do
   MVML.to_html 'index.mvml'

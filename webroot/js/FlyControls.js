@@ -2,20 +2,19 @@
  * @author James Baicoianu / http://www.baicoianu.com/
  */
 
-THREE.FlyControls = function ( camera, mesh, domElement ) {
+THREE.FlyControls = function ( camera, mesh, collision_commander ) {
 
   this.camera = camera;
   this.mesh = mesh;
+  this.collision = collision_commander;
 
-  this.domElement = ( domElement !== undefined ) ? domElement : document;
-  if ( domElement ) this.domElement.setAttribute( 'tabindex', -1 );
+  this.domElement = document;
 
   // API
 
   this.movementSpeed = 1.0;
   this.rollSpeed = 0.005;
 
-  this.dragToLook = false;
   this.autoForward = false;
 
   // disable default target object behavior
@@ -24,8 +23,8 @@ THREE.FlyControls = function ( camera, mesh, domElement ) {
 
   this.tmpQuaternion = new THREE.Quaternion();
 
-  this.mouseStatus = 0;
-  this.firstTouch = new THREE.Vector2(0,0);
+  this.panStart = new THREE.Vector2(0,0);
+  this.mouseDragging = false;
 
   this.moveState = { up: 0, down: 0, left: 0, right: 0, forward: 0, back: 0, pitchUp: 0, pitchDown: 0, yawLeft: 0, yawRight: 0, rollLeft: 0, rollRight: 0 };
   this.moveVector = new THREE.Vector3( 0, 0, 0 );
@@ -114,7 +113,16 @@ THREE.FlyControls = function ( camera, mesh, domElement ) {
 
   this.touchstart = function( event ) {
     //document.getElementById('info').innerHTML = event.targetTouches.length;
+    var touch = event.targetTouches[0];
+    this.pan_start(touch.pageX, touch.pageY);
+  };
 
+  this.mousedown = function( event ) {
+    this.mouseDragging = true;
+    this.pan_start(event.pageX, event.pageY);
+  };
+
+  this.pan_start = function(x, y) {
     event.preventDefault();
     event.stopPropagation();
 
@@ -122,30 +130,45 @@ THREE.FlyControls = function ( camera, mesh, domElement ) {
       this.domElement.focus();
     }
     
-    var touch = event.targetTouches[0];
-    this.firstTouch.x = touch.pageX;
-    this.firstTouch.y = touch.pageY;
+    this.panStart.x = x;
+    this.panStart.y = y;
   };
 
   this.touchmove = function( event ) {
-    //document.getElementById('info').innerHTML = event.targetTouches.length;
+    var touch = event.targetTouches[0];
+    this.pan_move(touch.pageX, touch.pageY, event.targetTouches.length);
+  };
 
-    if ( event.targetTouches.length == 1 ) {
-      this.moveState.back = 0;
-      this.moveState.forward = 0;
-      this.updateMovementVector();
+  this.mousemove = function( event ) {
+    this.mouseDown = true;
+    this.pan_move(event.pageX, event.pageY, 0);
+  };
 
-      var touch = event.targetTouches[0];
+  this.pan_move = function(x, y, touches) {
+    if ( this.mouseDragging ) {
       var container = this.getContainerDimensions();
       var halfWidth  = container.size[ 0 ] / 2;
       var halfHeight = container.size[ 1 ] / 2;
 
-      this.moveState.yawLeft   =   (this.firstTouch.x - touch.pageX) / halfWidth;
-      this.moveState.pitchDown = - (this.firstTouch.y - touch.pageY) / halfHeight;
+      this.moveState.yawLeft   = -( ( event.pageX - container.offset[ 0 ] ) - halfWidth  ) / halfWidth;
+      this.moveState.pitchDown =  ( ( event.pageY - container.offset[ 1 ] ) - halfHeight ) / halfHeight;
 
       this.updateRotationVector();
     }
-    else if ( event.targetTouches.length == 2 ) {
+    else if ( touches == 1 ) {
+      this.moveState.back = 0;
+      this.moveState.forward = 0;
+      this.updateMovementVector();
+
+      var container = this.getContainerDimensions();
+      var halfWidth  = container.size[ 0 ] / 2;
+      var halfHeight = container.size[ 1 ] / 2;
+
+      this.moveState.yawLeft   = -(this.panStart.x - x) / halfWidth;
+      this.moveState.pitchDown =  (this.panStart.y - y) / halfHeight;
+      this.updateRotationVector();
+    }
+    else if ( touches == 2 ) {
       this.moveState.yawLeft = 0;
       this.moveState.pitchDown = 0;
       this.updateRotationVector();
@@ -154,7 +177,7 @@ THREE.FlyControls = function ( camera, mesh, domElement ) {
       this.moveState.forward = 1;
       this.updateMovementVector();
     }
-    else if ( event.targetTouches.length >= 2 ) {
+    else if ( touches >= 2 ) {
       this.moveState.yawLeft = 0;
       this.moveState.pitchDown = 0;
       this.updateRotationVector();
@@ -167,71 +190,26 @@ THREE.FlyControls = function ( camera, mesh, domElement ) {
 
   this.touchend = function( event ) {
     //document.getElementById('info').innerHTML = event.targetTouches.length;
-
-    event.preventDefault();
-    event.stopPropagation();
-
-    this.moveState.yawLeft = this.moveState.pitchDown = this.moveState.forward = 0;
-    this.updateRotationVector();
-
     var touch = event.targetTouches[0];
-    this.firstTouch.x = touch.pageX;
-    this.firstTouch.y = touch.pageY;
-    this.updateMovementVector();
-  };
-
-  this.mousedown = function( event ) {
-    if ( this.domElement !== document ) {
-      this.domElement.focus();
-    }
-
-    event.preventDefault();
-    event.stopPropagation();
-
-    if ( this.dragToLook ) {
-      this.mouseStatus ++;
-    } else {
-      switch ( event.button ) {
-        case 0: this.moveState.forward = 1; break;
-        case 2: this.moveState.back = 1; break;
-      }
-      this.updateMovementVector();
-    }
-  };
-
-  this.mousemove = function( event ) {
-    if ( !this.dragToLook || this.mouseStatus > 0 ) {
-      var container = this.getContainerDimensions();
-      var halfWidth  = container.size[ 0 ] / 2;
-      var halfHeight = container.size[ 1 ] / 2;
-
-      this.moveState.yawLeft   = - ( ( event.pageX - container.offset[ 0 ] ) - halfWidth  ) / halfWidth;
-      this.moveState.pitchDown =   ( ( event.pageY - container.offset[ 1 ] ) - halfHeight ) / halfHeight;
-
-      this.updateRotationVector();
-    }
+    this.pan_end();
   };
 
   this.mouseup = function( event ) {
+    this.mouseDragging = false;
+    this.pan_end();
+  };
 
+  this.pan_end = function() {
     event.preventDefault();
     event.stopPropagation();
 
-    if ( this.dragToLook ) {
-      this.mouseStatus --;
-      this.moveState.yawLeft = this.moveState.pitchDown = 0;
-    } else {
-      switch ( event.button ) {
-        case 0: this.moveState.forward = 0; break;
-        case 2: this.moveState.back = 0; break;
-      }
-      this.updateMovementVector();
-    }
+    this.moveState.forward = this.moveState.back = 0;
+    this.moveState.yawLeft = this.moveState.pitchDown = 0;
+    this.updateMovementVector();
     this.updateRotationVector();
   };
 
   this.update = function( delta ) {
-
     var moveMult = delta * this.movementSpeed;
     var rotMult = delta * this.rollSpeed;
     var forward = this.lookVector.clone();
@@ -241,6 +219,11 @@ THREE.FlyControls = function ( camera, mesh, domElement ) {
     var movement = right.clone().multiplyScalar(this.moveVector.x);
     movement.add( forward.multiplyScalar(-this.moveVector.z) );
     movement.normalize().multiplyScalar(moveMult);
+
+    var distance = this.collision.distance( this.mesh, movement );
+    if (distance > 0) {
+      movement.normalize().multiplyScalar(distance - collision.theta);
+    }
 
     //if (clock.elapsedTime % 1 < 0.01) console.log(movement);
     this.camera.position.add(movement);
@@ -254,34 +237,12 @@ THREE.FlyControls = function ( camera, mesh, domElement ) {
     this.camera.lookAt(this.lookVector.clone().add(this.camera.position));
   };
 
-  /*this.checkForCollision = function() {
-    // this.moveVector
-    // this.mesh
-
-    for (var vertexIndex = 0; vertexIndex < mesh.geometry.vertices.length; vertexIndex++)
-    {   
-      var localVertex = mesh.geometry.vertices[vertexIndex].clone();
-      var globalVertex = localVertex.applyMatrix4( mesh.matrix );
-      var directionVector = globalVertex.sub( mesh.position );
-      
-      var ray = new THREE.Raycaster( mesh.position.clone(), directionVector.clone().normalize() );
-      var collisionResults = ray.intersectObjects( TODO:SCENE );
-      if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) {
-          document.getElementById('info').innerHTML = 'hi';
-      } 
-    }
-    //var ray = new THREE.Raycaster( mesh.position, );
-  }*/
-
   this.updateMovementVector = function() {
     var forward = ( this.moveState.forward || ( this.autoForward && !this.moveState.back ) ) ? 1 : 0;
 
     this.moveVector.x = ( -this.moveState.left    + this.moveState.right );
     this.moveVector.y = ( -this.moveState.down    + this.moveState.up );
     this.moveVector.z = ( -forward + this.moveState.back );
-
-    // collision detection
-    //this.checkForCollision();
 
     //console.log( 'move:', [ this.moveVector.x, this.moveVector.y, this.moveVector.z ] );
   };
