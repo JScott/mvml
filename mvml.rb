@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 require 'erubis'
-require 'yaml'
 
 module MVML
   @@eruby_path = 'index.eruby'
@@ -23,8 +22,8 @@ module MVML
     @@default
   end
 
-  def self.to_html(file, output_path=nil)
-    template = parse file
+  def self.to_html(mvml, output_path=nil)
+    template = parse mvml
     eruby = Erubis::Eruby.new File.read(@@eruby_path)
     html = eruby.result template
     unless output_path.nil?
@@ -35,12 +34,11 @@ module MVML
     return html
   end
 
-  def self.read(file)
-    YAML.load_file file
-  end
-
-  def self.parse(file)
-    mvml = read file
+  def self.parse(mvml)
+    mvml = {} if mvml.nil? || mvml.empty?
+    mvml['scene'] ||= {}
+    mvml['player'] ||= {}
+    
     template = {}
     template['title'] = mvml['title'] || @@default[:title]
     template['motd'] = mvml['motd'] || @@default[:motd]
@@ -55,22 +53,13 @@ module MVML
     end
     lists.each { |name| template[name].compact! }
 
-    if mvml['player'].nil?
-      template['player'] = {
-        'move_speed' => @@default[:move_speed],
-        'turn_speed' => @@default[:turn_speed],
-        'start' => @@default[:start_position]
-      }
-    else
-      template['player'] = {
-        'move_speed' => mvml['player']['move_speed'] || @@default[:move_speed],
-        'turn_speed' => mvml['player']['turn_speed'] || @@default[:turn_speed],
-        'start' => mvml['player']['start'] || @@default[:start]
-      }
-    end
+    template['player'] = {
+      'move_speed' => mvml['player']['move_speed'] || @@default[:move_speed],
+      'turn_speed' => mvml['player']['turn_speed'] || @@default[:turn_speed],
+      'start' => mvml['player']['start'] || @@default[:start]
+    }
 
     puts template
-
     return template
   end
 
