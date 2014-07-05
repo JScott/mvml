@@ -23,6 +23,12 @@ module MVML
     :rotation => "(0,0,0)",
     :texture => nil
   }
+	@@object_types = [
+		{name: 'primitives', singular_name: 'primitive'},
+		{name: 'meshes', singular_name: 'mesh'},
+		{name: 'lights', singular_name: 'light'},
+		{name: 'audio', singular_name: 'audio'}
+	]
 
   def self.default
     @@default
@@ -42,8 +48,24 @@ module MVML
 
   def self.parse(mvml_string)
 		mvml = YAML.load mvml_string
+		template = {}
+		unless mvml.nil?
+			template = base_template mvml
+			template.merge! scene_objects(mvml['scene']) unless mvml['scene'].nil?
+		end
+  end
 
-    template = {
+	def self.scene_objects(scene)
+		template = {}
+		@@object_types.each do |type|
+			template[type[:name]] = scene.select { |object| object.has_key? type[:singular_name] }
+			template[type[:name]].collect! { |object| self.send "new_#{type[:singular_name]}", object }
+		end
+	end
+
+
+	def self.base_template(mvml)
+    {
 			'title' => mvml['title'] || @@default[:title],
 			'motd' => mvml['motd'] || @@default[:motd],
     	'player' => {
@@ -52,23 +74,7 @@ module MVML
     	  'start' => mvml['player']['start'] || @@default[:start]
     	}
 		}
-
-    unless mvml['scene'].nil? || mvml['scene'].empty?
-			object_types = [
-				{name: 'primitives', singular_name: 'primitive'},
-				{name: 'meshes', singular_name: 'mesh'},
-				{name: 'lights', singular_name: 'light'},
-				{name: 'audio', singular_name: 'audio'}
-			]
-			object_types.each do |type|
-				template[type[:name]] = mvml['scene'].select { |object| object.has_key? type[:singular_name] }
-				template[type[:name]].collect! { |object| self.send "new_#{type[:singular_name]}", object }
-			end
-		end
-
-    return template
-  end
-
+	end
 
   def self.get_render_method(model)
     case model

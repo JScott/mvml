@@ -1,7 +1,8 @@
 require './mvml'
 
 spec_mvml = IO.read './spec/data/spec.mvml'
-empty_mvml = IO.read './spec/data/empty.mvml'
+blank_mvml = IO.read './spec/data/blank.mvml'
+#TODO: empty_mvml with scaffolding but no data
 
 describe MVML do
   describe '.convert_rotation' do
