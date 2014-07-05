@@ -41,31 +41,28 @@ module MVML
   end
 
   def self.parse(mvml_string)
-		# TODO: Merge default, blank MVML with given MVML
-		mvml = YAML.load mvml_string
-    mvml = {} if mvml.nil? || mvml.empty?
-    mvml['scene'] ||= {}
-    mvml['player'] ||= {}
+    mvml = { 'scene' => {} }
+		mvml.merge! YAML.load mvml_string
     
     template = {}
     template['title'] = mvml['title'] || @@default[:title]
     template['motd'] = mvml['motd'] || @@default[:motd]
-
-    lists = ['primitives', 'meshes', 'lights', 'audio']
-    lists.each { |name| template[name] = [] }
-		mvml['scene'].each do |object|
-      template['primitives'].push(new_primitive(object)) if object.has_key? 'primitive'
-      template['meshes'].push(new_mesh(object)) if object.has_key? 'mesh'
-      #template['lights'].push(new_light(object)) if object.has_key? 'light'
-      #template['audio'].push(new_audio(object)) if object.has_key? 'audio'
-    end
-    lists.each { |name| template[name].compact! }
-
     template['player'] = {
       'move_speed' => mvml['player']['move_speed'] || @@default[:move_speed],
       'turn_speed' => mvml['player']['turn_speed'] || @@default[:turn_speed],
       'start' => mvml['player']['start'] || @@default[:start]
     }
+
+    lists = [
+			{name: 'primitives', singular_name: 'primitive'},
+			{name: 'meshes', singular_name: 'mesh'},
+			{name: 'lights', singular_name: 'light'},
+			{name: 'audio', singular_name: 'audio'}
+		]
+		lists.each do |list|
+			template[list[:name]] = mvml['scene'].select { |object| object.has_key? list[:singular_name] }
+			template[list[:name]].collect! { |object| self.send "new_#{list[:singular_name]}", object }
+		end
 
     return template
   end
