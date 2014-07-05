@@ -40,7 +40,7 @@ describe MVML do
       end
     end
 		context 'Empty MVML' do
-			subject { MVML.parse empty_mvml }
+			subject { MVML.parse blank_mvml }
       it 'still returns a templating hash' do
         subject.class.should equal Hash
       end

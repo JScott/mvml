@@ -36,7 +36,7 @@ module MVML
 
   def self.to_html(mvml_string, output_path=nil)
 		template = parse mvml_string
-    eruby = Erubis::Eruby.new File.read(@@eruby_path)
+		eruby = Erubis::Eruby.new File.read(@@eruby_path)
     html = eruby.result template
     unless output_path.nil?
       File.open(output_path, 'w') do |file|
@@ -53,6 +53,7 @@ module MVML
 			template = base_template mvml
 			template.merge! scene_objects(mvml['scene']) unless mvml['scene'].nil?
 		end
+		return template
   end
 
 	def self.scene_objects(scene)
@@ -61,8 +62,8 @@ module MVML
 			template[type[:name]] = scene.select { |object| object.has_key? type[:singular_name] }
 			template[type[:name]].collect! { |object| self.send "new_#{type[:singular_name]}", object }
 		end
+		return template
 	end
-
 
 	def self.base_template(mvml)
     {
