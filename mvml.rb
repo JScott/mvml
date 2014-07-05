@@ -1,26 +1,7 @@
 #!/usr/bin/env ruby
 require 'erubis'
-require 'logger'
 require 'yaml'
-
-class Logger
-	def fn(name, *params)
-		log_string = "called #{name}"
-	  params.each do |param|
-			log_string += "\n#{param.class} - #{param}\n"
-		end
-		puts log_string
-		#log.debug log_string
-	end
-end
-
-def log_fn(name, *params)
-		log_string = "called #{name}"
-	  params.each do |param|
-			log_string += "\n#{param.class} - #{param}\n"
-		end
-		puts log_string
-end
+require 'logger'
 
 log = Logger.new $stdout
 log.level = Logger::DEBUG
@@ -48,10 +29,7 @@ module MVML
   end
 
   def self.to_html(mvml_string, output_path=nil)
-		#log.fn 'to_html', mvml, output_path
-		log_fn 'to_html', mvml_string, output_path
-    #puts "to_html\n#{mvml}\n#{output_path}"
-		template = parse YAML.load(mvml_string)
+		template = parse mvml_string
     eruby = Erubis::Eruby.new File.read(@@eruby_path)
     html = eruby.result template
     unless output_path.nil?
@@ -62,12 +40,9 @@ module MVML
     return html
   end
 
-  def self.parse(mvml)
+  def self.parse(mvml_string)
 		# TODO: Merge default, blank MVML with given MVML
-		#log.fn 'parse', mvml
-		log_fn 'parse', mvml
-	  #puts "parse\n#{mvml}"
-
+		mvml = YAML.load mvml_string
     mvml = {} if mvml.nil? || mvml.empty?
     mvml['scene'] ||= {}
     mvml['player'] ||= {}
@@ -78,7 +53,7 @@ module MVML
 
     lists = ['primitives', 'meshes', 'lights', 'audio']
     lists.each { |name| template[name] = [] }
-    mvml['scene'].each do |object|
+		mvml['scene'].each do |object|
       template['primitives'].push(new_primitive(object)) if object.has_key? 'primitive'
       template['meshes'].push(new_mesh(object)) if object.has_key? 'mesh'
       #template['lights'].push(new_light(object)) if object.has_key? 'light'
@@ -92,7 +67,6 @@ module MVML
       'start' => mvml['player']['start'] || @@default[:start]
     }
 
-    puts template
     return template
   end
 
