@@ -6,69 +6,69 @@ blank_mvml = IO.read './spec/data/blank.mvml'
 
 describe MVML do
   describe '.convert_rotation' do
-    context '"(x,y,z)" notation in degrees' do
+    context 'with degrees in "(x,y,z)" notation' do
       subject { MVML.convert_rotation '(0, 180,-90)' }
       it 'converts to radians' do
-        subject.should =~ /^\(0.0,3.1415926.*,-1.5707963.*\)$/
+        expect(subject).to match /^\(0.0,3.1415926.*,-1.5707963.*\)$/
       end
     end
   end
 
   describe '.parse' do
-    context 'MVML spec' do
+    context 'with the MVML spec file' do
       subject { MVML.parse spec_mvml }
       it 'returns a templating hash' do
-        subject.class.should equal Hash
+        expect(subject.class).to equal Hash
       end
-      it 'with a title' do
-        subject.should include "title"
+      it 'returns a title' do
+        expect(subject).to include "title"
       end
-      it 'and a message of the day' do
-        subject.should include "motd"
+      it 'returns a message of the day' do
+        expect(subject).to include "motd"
       end
-      it 'and player rules' do
-        subject.should include "player"
-        subject['player'].count.should be > 0
+      it 'returns player rules' do
+        expect(subject).to include "player"
+        expect(subject['player'].count).to be > 0
       end
-      it 'and primitives' do
-        subject.should include "primitives"
-        subject['primitives'].count.should be > 0
+      it 'returns primitives' do
+        expect(subject).to include "primitives"
+        expect(subject['primitives'].count).to be > 0
       end
-      it 'and meshes' do
-        subject.should include "meshes"
-        subject['meshes'].count.should be > 0
+      it 'returns meshes' do
+        expect(subject).to include "meshes"
+        expect(subject['meshes'].count).to be > 0
       end
     end
-		context 'Empty MVML' do
+		context 'with a blank MVML file' do
 			subject { MVML.parse blank_mvml }
-      it 'still returns a templating hash' do
-        subject.class.should equal Hash
+      it 'returns a templating hash' do
+        expect(subject.class).to equal Hash
       end
 		end
   end
 
   describe '.to_html' do
-    context 'MVML spec' do
+    context 'with the MVML spec file' do
       subject { MVML.to_html spec_mvml }
-      it 'creates a WebGL/three.js HTML' do
-        subject.should include '<html lang="en">'
-        subject.should =~ /three.*js/
+      it 'generates WebGL/three.js HTML' do
+        expect(subject).to include '<html lang="en">'
+        expect(subject).to match /three.*js/
       end
-      it 'with a title' do
-        subject.should include '<title>'
+      it 'generates a title' do
+        expect(subject).to include '<title>'
       end
-      it 'and player rules' do
-        subject.should include "controls.movementSpeed"
-        subject.should include "controls.rollSpeed"
-        subject.should include "camera.position.set"
+      it 'generates player rules' do
+        expect(subject).to include "controls.movementSpeed"
+        expect(subject).to include "controls.rollSpeed"
+        expect(subject).to include "camera.position.set"
       end
-      it 'and one of each primitive' do
-        subject.should include 'BoxGeometry'
-        subject.should include 'SphereGeometry'
-        subject.should include 'PlaneGeometry'
+      it 'generates one of each primitive' do
+        expect(subject).to include 'BoxGeometry'
+        expect(subject).to include 'SphereGeometry'
+        expect(subject).to include 'PlaneGeometry'
       end
-      it 'and an invader mesh' do
-        subject.should include 'models/invader.obj.js'
+      it 'generates an invader mesh' do
+        expect(subject).to include 'models/invader.obj.js'
       end
     end
   end
