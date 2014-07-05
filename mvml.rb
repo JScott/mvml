@@ -1,5 +1,30 @@
 #!/usr/bin/env ruby
 require 'erubis'
+require 'logger'
+require 'yaml'
+
+class Logger
+	def fn(name, *params)
+		log_string = "called #{name}"
+	  params.each do |param|
+			log_string += "\n#{param.class} - #{param}\n"
+		end
+		puts log_string
+		#log.debug log_string
+	end
+end
+
+def log_fn(name, *params)
+		log_string = "called #{name}"
+	  params.each do |param|
+			log_string += "\n#{param.class} - #{param}\n"
+		end
+		puts log_string
+end
+
+log = Logger.new $stdout
+log.level = Logger::DEBUG
+log.progname = 'MVML'
 
 module MVML
   @@eruby_path = 'index.eruby'
@@ -22,8 +47,11 @@ module MVML
     @@default
   end
 
-  def self.to_html(mvml, output_path=nil)
-    template = parse mvml
+  def self.to_html(mvml_string, output_path=nil)
+		#log.fn 'to_html', mvml, output_path
+		log_fn 'to_html', mvml_string, output_path
+    #puts "to_html\n#{mvml}\n#{output_path}"
+		template = parse YAML.load(mvml_string)
     eruby = Erubis::Eruby.new File.read(@@eruby_path)
     html = eruby.result template
     unless output_path.nil?
@@ -35,6 +63,11 @@ module MVML
   end
 
   def self.parse(mvml)
+		# TODO: Merge default, blank MVML with given MVML
+		#log.fn 'parse', mvml
+		log_fn 'parse', mvml
+	  #puts "parse\n#{mvml}"
+
     mvml = {} if mvml.nil? || mvml.empty?
     mvml['scene'] ||= {}
     mvml['player'] ||= {}

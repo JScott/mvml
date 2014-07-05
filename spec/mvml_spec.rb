@@ -1,6 +1,6 @@
 require './mvml'
 
-spec = './spec/data/valid.0.1.mvml'
+spec = IO.read './spec/data/valid.0.1.mvml'
 
 describe MVML do
   describe '.convert_rotation' do

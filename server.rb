@@ -1,7 +1,5 @@
 require 'sinatra'
-require 'pp'
 require './mvml'
-require 'yaml'
 
 set :public, 'webroot'
 set :bind, '0.0.0.0'
@@ -16,7 +14,7 @@ post '/' do
   mvml = request.body.read
   # TODO: don't crash on bad data
   # TODO: lint the YAML/MVML
-  MVML.to_html YAML.load(mvml)
+  MVML.to_html mvml
 end
 
 get '/raw' do
