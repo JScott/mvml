@@ -41,27 +41,29 @@ module MVML
   end
 
   def self.parse(mvml_string)
-    mvml = { 'scene' => {} }
-		mvml.merge! YAML.load mvml_string
-    
-    template = {}
-    template['title'] = mvml['title'] || @@default[:title]
-    template['motd'] = mvml['motd'] || @@default[:motd]
-    template['player'] = {
-      'move_speed' => mvml['player']['move_speed'] || @@default[:move_speed],
-      'turn_speed' => mvml['player']['turn_speed'] || @@default[:turn_speed],
-      'start' => mvml['player']['start'] || @@default[:start]
-    }
+		mvml = YAML.load mvml_string
 
-    lists = [
-			{name: 'primitives', singular_name: 'primitive'},
-			{name: 'meshes', singular_name: 'mesh'},
-			{name: 'lights', singular_name: 'light'},
-			{name: 'audio', singular_name: 'audio'}
-		]
-		lists.each do |list|
-			template[list[:name]] = mvml['scene'].select { |object| object.has_key? list[:singular_name] }
-			template[list[:name]].collect! { |object| self.send "new_#{list[:singular_name]}", object }
+    template = {
+			'title' => mvml['title'] || @@default[:title],
+			'motd' => mvml['motd'] || @@default[:motd],
+    	'player' => {
+    	  'move_speed' => mvml['player']['move_speed'] || @@default[:move_speed],
+    	  'turn_speed' => mvml['player']['turn_speed'] || @@default[:turn_speed],
+    	  'start' => mvml['player']['start'] || @@default[:start]
+    	}
+		}
+
+    unless mvml['scene'].nil? || mvml['scene'].empty?
+			object_types = [
+				{name: 'primitives', singular_name: 'primitive'},
+				{name: 'meshes', singular_name: 'mesh'},
+				{name: 'lights', singular_name: 'light'},
+				{name: 'audio', singular_name: 'audio'}
+			]
+			object_types.each do |type|
+				template[type[:name]] = mvml['scene'].select { |object| object.has_key? type[:singular_name] }
+				template[type[:name]].collect! { |object| self.send "new_#{type[:singular_name]}", object }
+			end
 		end
 
     return template
