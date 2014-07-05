@@ -1,6 +1,6 @@
 # MVML
 
-Welcome to the home of the MetaVerse Markup Language.
+The official MVML interpreter. Converts to HTML/WebGL to view 3D spaces in your browser.
 
 ## Goal
 
@@ -8,14 +8,20 @@ WebGL finally lets us share 3D worlds with each other but it's still restricted 
 
 # Getting started
 
-I'll be working on the Ansible playbook later to hook everything up for you once it gets complicated. Until then:
+This repo is a server that will convert MVML to HTML/WebGL for you. Just POST to the root with MVML in the body and it'll return the corresponding HTML/WebGL. Check out [mvml-host](http://github.com/JScott/mvml-host) for a server built to interact with this service.
+
+Eventually I'll set up an ansible playbook to set everything up for you. Until then, run it with this:
 
 ```
 bundle install
 sudo ruby server.rb
 ```
 
-Visit yourdomain.com to see index.mvml. Visit yourdomain.com/raw to see index.mvml displayed in plain text.
+Have your content server POST to this one and enjoy!
+
+## Disclaimer
+
+Right now I'm referencing files in the HTML that are hosted in the mvml-host repo.
 
 <!--```
 cd ansible
