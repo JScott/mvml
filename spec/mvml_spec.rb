@@ -39,15 +39,6 @@ describe MVML do
     end
   end
 
-  describe '.read' do
-    context 'MVML spec' do
-      subject { MVML.read spec }
-      it 'creates a Hash' do
-        subject.class.should equal Hash
-      end
-    end
-  end
-
   describe '.to_html' do
     context 'MVML spec' do
       subject { MVML.to_html spec }
