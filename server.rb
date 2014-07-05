@@ -1,12 +1,15 @@
 require 'sinatra'
 require './mvml'
 
-set :public_dir, 'webroot'
 set :bind, '0.0.0.0'
 set :port, ARGV[0] || 6865
 
 get '/' do
-  MVML.to_html YAML.load_file('index.mvml')
+  %Q[
+	<h1>MVML to HTML interpreter</h1>
+	<p>Post MVML to this URL and I'll compile it into WebGL code for you.</p>
+	<p>Check out <a href='https://github.com/JScott/mvml'>github.com/JScott/mvml</a> to view the code.</p>
+	]
 end
 
 post '/' do
@@ -15,9 +18,4 @@ post '/' do
   # TODO: don't crash on bad data
   # TODO: lint the YAML/MVML
   MVML.to_html mvml
-end
-
-get '/raw' do
-  content_type 'text/plain'
-  File.read 'index.mvml'
 end
