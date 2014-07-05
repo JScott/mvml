@@ -1,6 +1,7 @@
 require './mvml'
 
-spec = IO.read './spec/data/valid.0.1.mvml'
+spec_mvml = IO.read './spec/data/spec.mvml'
+empty_mvml = IO.read './spec/data/empty.mvml'
 
 describe MVML do
   describe '.convert_rotation' do
@@ -14,7 +15,7 @@ describe MVML do
 
   describe '.parse' do
     context 'MVML spec' do
-      subject { MVML.parse spec }
+      subject { MVML.parse spec_mvml }
       it 'returns a templating hash' do
         subject.class.should equal Hash
       end
@@ -37,11 +38,17 @@ describe MVML do
         subject['meshes'].count.should be > 0
       end
     end
+		context 'Empty MVML' do
+			subject { MVML.parse empty_mvml }
+      it 'still returns a templating hash' do
+        subject.class.should equal Hash
+      end
+		end
   end
 
   describe '.to_html' do
     context 'MVML spec' do
-      subject { MVML.to_html spec }
+      subject { MVML.to_html spec_mvml }
       it 'creates a WebGL/three.js HTML' do
         subject.should include '<html lang="en">'
         subject.should =~ /three.*js/
