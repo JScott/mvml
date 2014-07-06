@@ -1,6 +1,11 @@
 #!/usr/bin/env ruby
 require 'erubis'
 require 'yaml'
+require 'logger'
+
+log = Logger.new $stdout
+log.level = Logger::DEBUG
+log.progname = 'MVML'
 
 module MVML
   @@eruby_path = 'index.eruby'
@@ -18,14 +23,20 @@ module MVML
     :rotation => "(0,0,0)",
     :texture => nil
   }
+	@@object_types = [
+		{name: 'primitives', singular_name: 'primitive'},
+		{name: 'meshes', singular_name: 'mesh'},
+		{name: 'lights', singular_name: 'light'},
+		{name: 'audio', singular_name: 'audio'}
+	]
 
   def self.default
     @@default
   end
 
-  def self.to_html(file, output_path=nil)
-    template = parse file
-    eruby = Erubis::Eruby.new File.read(@@eruby_path)
+  def self.to_html(mvml_string, output_path=nil)
+		template = parse mvml_string
+		eruby = Erubis::Eruby.new File.read(@@eruby_path)
     html = eruby.result template
     unless output_path.nil?
       File.open(output_path, 'w') do |file|
@@ -35,45 +46,36 @@ module MVML
     return html
   end
 
-  def self.read(file)
-    YAML.load_file file
+  def self.parse(mvml_string)
+		mvml = YAML.load mvml_string
+		template = {}
+		unless mvml.nil?
+			template = base_template mvml
+			template.merge! scene_objects(mvml['scene']) unless mvml['scene'].nil?
+		end
+		return template
   end
 
-  def self.parse(file)
-    mvml = read file
-    template = {}
-    template['title'] = mvml['title'] || @@default[:title]
-    template['motd'] = mvml['motd'] || @@default[:motd]
+	def self.scene_objects(scene)
+		template = {}
+		@@object_types.each do |type|
+			template[type[:name]] = scene.select { |object| object.has_key? type[:singular_name] }
+			template[type[:name]].collect! { |object| self.send "new_#{type[:singular_name]}", object }
+		end
+		return template
+	end
 
-    lists = ['primitives', 'meshes', 'lights', 'audio']
-    lists.each { |name| template[name] = [] }
-    mvml['scene'].each do |object|
-      template['primitives'].push(new_primitive(object)) if object.has_key? 'primitive'
-      template['meshes'].push(new_mesh(object)) if object.has_key? 'mesh'
-      #template['lights'].push(new_light(object)) if object.has_key? 'light'
-      #template['audio'].push(new_audio(object)) if object.has_key? 'audio'
-    end
-    lists.each { |name| template[name].compact! }
-
-    if mvml['player'].nil?
-      template['player'] = {
-        'move_speed' => @@default[:move_speed],
-        'turn_speed' => @@default[:turn_speed],
-        'start' => @@default[:start_position]
-      }
-    else
-      template['player'] = {
-        'move_speed' => mvml['player']['move_speed'] || @@default[:move_speed],
-        'turn_speed' => mvml['player']['turn_speed'] || @@default[:turn_speed],
-        'start' => mvml['player']['start'] || @@default[:start]
-      }
-    end
-
-    puts template
-
-    return template
-  end
-
+	def self.base_template(mvml)
+    {
+			'title' => mvml['title'] || @@default[:title],
+			'motd' => mvml['motd'] || @@default[:motd],
+    	'player' => {
+    	  'move_speed' => mvml['player']['move_speed'] || @@default[:move_speed],
+    	  'turn_speed' => mvml['player']['turn_speed'] || @@default[:turn_speed],
+    	  'start' => mvml['player']['start'] || @@default[:start]
+    	}
+		}
+	end
 
   def self.get_render_method(model)
     case model
