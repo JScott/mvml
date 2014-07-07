@@ -110,28 +110,26 @@ module MVML
   end
 
   def self.new_model(object)
-    rotation = @@default[:rotation]
-    rotation = convert_rotation object['rotation'] unless object['rotation'].nil?
-    color = object['color']
-    color = "\'#{color}\'" if color.class == String
+    object['rotation'] = convert_rotation object['rotation'] unless object['rotation'].nil?
+    object['color'] = "\'#{object['color']}\'" if object['color'].class == String
     {
-      :color => color || @@default[:color],
-      :scale => object['scale'] || @@default[:scale],
-      :position => object['position'] || @@default[:position],
-      :rotation => rotation,
-      :texture => object['texture'] || @@default[:texture]
-    }
+      'color' => @@default[:color],
+      'scale' => @@default[:scale],
+      'position' => @@default[:position],
+      'rotation' => @@default[:rotation],
+      'texture' => @@default[:texture]
+    }.merge object
   end
 
   def self.new_mesh(object)
     {
-      :path => object['mesh']
+      'path' => object['mesh']
     }.merge new_model(object)
   end
 
   def self.new_primitive(object)
     {
-      :render_call => get_render_method(object['primitive']) 
+      'render_call' => get_render_method(object['primitive']) 
     }.merge new_model(object)
   end
 
