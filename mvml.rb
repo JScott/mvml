@@ -24,10 +24,10 @@ module MVML
     :texture => nil
   }
 	@@object_types = [
-		{name: 'primitives', singular_name: 'primitive'},
-		{name: 'meshes', singular_name: 'mesh'},
-		{name: 'lights', singular_name: 'light'},
-		{name: 'audio', singular_name: 'audio'}
+		{name: 'primitive', plural_name: 'primitives'},
+		{name: 'mesh', plural_name: 'meshes'},
+		{name: 'light', plural_name: 'lights'},
+		{name: 'audio', plural_name: 'audio'}
 	]
 
   def self.default
@@ -51,31 +51,41 @@ module MVML
 		template = {}
 		unless mvml.nil?
 			template = base_template mvml
-			template.merge! scene_objects(mvml['scene']) unless mvml['scene'].nil?
+      template.merge! player_template(mvml['player'] || {})
+			template.merge! scene_template(mvml['scene'] || {})
 		end
 		return template
   end
 
-	def self.scene_objects(scene)
-		template = {}
-		@@object_types.each do |type|
-			template[type[:name]] = scene.select { |object| object.has_key? type[:singular_name] }
-			template[type[:name]].collect! { |object| self.send "new_#{type[:singular_name]}", object }
-		end
-		return template
-	end
-
 	def self.base_template(mvml)
     {
 			'title' => mvml['title'] || @@default[:title],
-			'motd' => mvml['motd'] || @@default[:motd],
-    	'player' => {
-    	  'move_speed' => mvml['player']['move_speed'] || @@default[:move_speed],
-    	  'turn_speed' => mvml['player']['turn_speed'] || @@default[:turn_speed],
-    	  'start' => mvml['player']['start'] || @@default[:start]
-    	}
+			'motd' => mvml['motd'] || @@default[:motd]
 		}
 	end
+
+  def self.player_template(player)
+    {
+      'player' => {
+        'move_speed' => @@default[:move_speed],
+        'turn_speed' => @@default[:turn_speed],
+        'start' => @@default[:start]
+      }
+    }.merge player
+  end
+
+  def self.scene_template(scene)
+    template = {}
+    @@object_types.each do |type|
+      template[type[:plural_name]] = new_scene_objects scene, type[:name]
+    end
+    return template
+  end
+
+  def self.new_scene_objects(scene, type)
+    list.select! { |object| object.has_key? type }
+    list.collect { |object| self.send "new_#{type}", object }
+  end
 
   def self.get_render_method(model)
     case model
