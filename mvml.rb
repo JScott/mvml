@@ -83,8 +83,8 @@ module MVML
   end
 
   def self.new_scene_objects(scene, type)
-    scene.select! { |object| object.has_key? type }
-    scene.collect { |object| self.send "new_#{type}", object }
+    objects = scene.select { |object| object.has_key? type }
+    objects.collect { |object| self.send "new_#{type}", object }
   end
 
   def self.get_render_method(model)
