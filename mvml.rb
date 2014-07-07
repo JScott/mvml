@@ -54,6 +54,7 @@ module MVML
       template.merge! player_template(mvml['player'] || {})
 			template.merge! scene_template(mvml['scene'] || {})
 		end
+    puts template
 		return template
   end
 
@@ -71,7 +72,7 @@ module MVML
         'turn_speed' => @@default[:turn_speed],
         'start' => @@default[:start]
       }
-    }.merge player
+    }.merge({ 'player' => player })
   end
 
   def self.scene_template(scene)
