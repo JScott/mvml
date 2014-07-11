@@ -10,7 +10,7 @@
     <script src="js/Detector.js"></script>
     <script src="js/THREEx/KeyboardState.js"></script>
     <script src="js/FlyControls.js"></script>
-    <script src="js/physi.js"></script>
+    <script src="js/CollisionCommander.js"></script>
   </head>
 
   <body>
@@ -41,11 +41,8 @@
         document.body.appendChild( container );
 
         // SCENE
-        scene = new Physijs.Scene();
-        scene.setGravity(new THREE.Vector3(0, <%= player['gravity'] %>))
-        scene.addEventListener('update', function() {
-          scene.simulate();
-        });
+        scene = new THREE.Scene();
+        collision = new THREE.CollisionCommander();
 
         // CAMERA
         var player_height = 5;
@@ -89,6 +86,7 @@
         obj.rotation.set<%= prim['rotation'] %>;
         obj.scale.set<%= prim['scale'] %>;
         scene.add(obj);
+        collision.mesh_list.push(obj);
         <% end %>
         <% unless meshes.empty? %>
         var loader = new THREE.JSONLoader(); 
@@ -106,6 +104,7 @@
           obj.rotation.set<%= mesh['rotation'] %>;
           obj.scale.set<%= mesh['scale'] %>;
           scene.add(obj);
+          collision.mesh_list.push(obj);
         });
         <% end %>
         <% end %>
@@ -132,10 +131,11 @@
         container.appendChild( renderer.domElement );
 
         // CONTROLS
-        controls = new THREE.FlyControls( camera, player_mesh );
+        controls = new THREE.FlyControls( camera, player_mesh, collision );
         controls.domElement = container;
         controls.movementSpeed = <%= player['move_speed'] %>;
         controls.rollSpeed = <%= player['turn_speed'] %>;
+        controls.gravity = <%= player['gravity'] %>;
         controls.autoForward = false;
         controls.dragToLook = true;
 
