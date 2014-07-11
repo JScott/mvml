@@ -16,6 +16,7 @@ module MVML
     :move_speed => 15,
     :turn_speed => 1.5,
     :start => "(0,0,0)",
+		:gravity => 9.8,
 
     :color => 0xffffff,
     :scale => "(1,1,1)",
@@ -54,7 +55,6 @@ module MVML
       template.merge! player_template(mvml['player'] || {})
 			template.merge! scene_template(mvml['scene'] || {})
 		end
-    puts template
 		return template
   end
 
@@ -70,9 +70,10 @@ module MVML
       'player' => {
         'move_speed' => @@default[:move_speed],
         'turn_speed' => @@default[:turn_speed],
-        'start' => @@default[:start]
-      }
-    }.merge({ 'player' => player })
+        'start' => @@default[:start],
+				'gravity' => @@default[:gravity]
+      }.merge(player)
+    }
   end
 
   def self.scene_template(scene)

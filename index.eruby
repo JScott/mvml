@@ -135,6 +135,7 @@
         controls.domElement = container;
         controls.movementSpeed = <%= player['move_speed'] %>;
         controls.rollSpeed = <%= player['turn_speed'] %>;
+        controls.gravity = <%= player['gravity'] %>;
         controls.autoForward = false;
         controls.dragToLook = true;
 
