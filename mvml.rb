@@ -89,16 +89,16 @@ module MVML
     objects.collect { |object| self.send "new_#{type}", object }
   end
 
-  def self.get_render_method(model)
+  def self.get_render_methods(model)
     case model
     when 'box'
-      "BoxGeometry(1,1,1)"
+      ["BoxGeometry(1,1,1)", ]
     when 'sphere'
-      "SphereGeometry(1)"
+      ["SphereGeometry(1)"]
     when 'plane'
-      "PlaneGeometry(1,1)"
+      ["PlaneGeometry(1,1)"]
     else
-      "BoxGeometry(1,1,1)"
+      ["BoxGeometry(1,1,1)"]
     end
   end
 
@@ -130,7 +130,7 @@ module MVML
 
   def self.new_primitive(object)
     {
-      'render_call' => get_render_method(object['primitive']) 
+      'render_call' => get_render_methods(object['primitive'])
     }.merge new_model(object)
   end
 
