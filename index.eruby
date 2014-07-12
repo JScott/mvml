@@ -20,7 +20,7 @@
     Touch: <b>1 finger</b> pan, <b>2</b> forward, <b>3</b> backward<br/>
     </div>
 
-    <script>   
+    <script>
       var container;
       var camera, controls, scene, renderer
       var player_mesh;
@@ -85,11 +85,12 @@
         obj.position.set<%= prim['position'] %>;
         obj.rotation.set<%= prim['rotation'] %>;
         obj.scale.set<%= prim['scale'] %>;
+        //obj.geometry.computeFaceNormals();
         scene.add(obj);
         collision.mesh_list.push(obj);
         <% end %>
         <% unless meshes.empty? %>
-        var loader = new THREE.JSONLoader(); 
+        var loader = new THREE.JSONLoader();
         <% for mesh in meshes %>
         loader.load('<%= mesh['path'] %>', function (geometry) {
           material = new THREE.MeshLambertMaterial({
@@ -103,6 +104,7 @@
           obj.position.set<%= mesh['position'] %>;
           obj.rotation.set<%= mesh['rotation'] %>;
           obj.scale.set<%= mesh['scale'] %>;
+          //obj.geometry.computeFaceNormals();
           scene.add(obj);
           collision.mesh_list.push(obj);
         });
@@ -113,10 +115,10 @@
         player_mesh = new THREE.Mesh(geometry, material);
         player_mesh.position.set<%= player['start'] %>;
         player_mesh.position.y += player_height/2.0;
-        player_mesh.visible = false;
+        //player_mesh.visible = false;
         scene.add(player_mesh);
         /*var floorTexture = new THREE.ImageUtils.loadTexture( 'images/checkerboard.jpg' );
-        floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping; 
+        floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
         floorTexture.repeat.set( 10, 10 );
         var floorMaterial = new THREE.MeshBasicMaterial( { map: floorTexture, side: THREE.DoubleSide } );*/
 
@@ -125,7 +127,7 @@
           renderer = new THREE.WebGLRenderer( {antialias:true} );
         }
         else {
-          renderer = new THREE.CanvasRenderer(); 
+          renderer = new THREE.CanvasRenderer();
         }
         renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
         container.appendChild( renderer.domElement );
