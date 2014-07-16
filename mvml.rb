@@ -15,6 +15,8 @@ module MVML
 
     :move_speed => 15,
     :turn_speed => 1.5,
+    :min_jump_speed => 1.0,
+    :max_jump_speed => 2.0,
     :start => "(0,0,0)",
 		:gravity => 9.8,
 
@@ -70,6 +72,8 @@ module MVML
       'player' => {
         'move_speed' => @@default[:move_speed],
         'turn_speed' => @@default[:turn_speed],
+        'min_jump_speed' => @@default[:min_jump_speed],
+        'max_jump_speed' => @@default[:max_jump_speed],
         'start' => @@default[:start],
 				'gravity' => @@default[:gravity]
       }.merge(player)
@@ -104,7 +108,7 @@ module MVML
 
   def self.convert_rotation(rotation)
     rotation = rotation.slice(1...-1).gsub(' ', '').split ','
-    rotation.map! do |rotation| 
+    rotation.map! do |rotation|
       rotation.to_f * Math::PI / 180.0
     end
     "(#{ rotation.join ',' })"
@@ -130,7 +134,7 @@ module MVML
 
   def self.new_primitive(object)
     {
-      'render_call' => get_render_method(object['primitive']) 
+      'render_call' => get_render_method(object['primitive'])
     }.merge new_model(object)
   end
 

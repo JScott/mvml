@@ -115,7 +115,7 @@
         player_mesh = new THREE.Mesh(geometry, material);
         player_mesh.position.set<%= player['start'] %>;
         player_mesh.position.y += player_height/2.0;
-        //player_mesh.visible = false;
+        player_mesh.visible = false;
         scene.add(player_mesh);
         /*var floorTexture = new THREE.ImageUtils.loadTexture( 'images/checkerboard.jpg' );
         floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
@@ -138,8 +138,9 @@
         controls.movementSpeed = <%= player['move_speed'] %>;
         controls.rollSpeed = <%= player['turn_speed'] %>;
         controls.gravity = <%= player['gravity'] %>;
-        controls.autoForward = false;
         controls.dragToLook = true;
+        controls.minJumpSpeed = <%= player['min_jump_speed'] %>;
+        controls.maxJumpSpeed = <%= player['max_jump_speed'] %>;
 
         // EVENTS
         //THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
