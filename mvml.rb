@@ -8,7 +8,7 @@ log.level = Logger::DEBUG
 log.progname = 'MVML'
 
 module MVML
-  @@eruby_path = 'index.eruby'
+  @@eruby_path = File.expand_path '../index.eruby', __FILE__
   @@default = {
     :title => "MVML space",
     :motd => "",
@@ -36,6 +36,7 @@ module MVML
 
   def self.to_html(mvml_string, output_path=nil)
 		template = parse mvml_string
+		puts @@eruby_path
 		eruby = Erubis::Eruby.new File.read(@@eruby_path)
     html = eruby.result template
     unless output_path.nil?

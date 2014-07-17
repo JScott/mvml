@@ -1,5 +1,5 @@
 require 'sinatra'
-require './mvml'
+require_relative './mvml'
 
 set :bind, '0.0.0.0'
 set :port, ARGV[0] || 6865
