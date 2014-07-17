@@ -15,7 +15,10 @@ module MVML
 
     :move_speed => 15,
     :turn_speed => 1.5,
+    :min_jump_speed => 1.0,
+    :max_jump_speed => 2.0,
     :start => "(0,0,0)",
+		:gravity => 9.8,
 
     :color => 0xffffff,
     :scale => "(1,1,1)",
@@ -24,10 +27,10 @@ module MVML
     :texture => nil
   }
 	@@object_types = [
-		{name: 'primitives', singular_name: 'primitive'},
-		{name: 'meshes', singular_name: 'mesh'},
-		{name: 'lights', singular_name: 'light'},
-		{name: 'audio', singular_name: 'audio'}
+		{name: 'primitive', plural_name: 'primitives'},
+		{name: 'mesh', plural_name: 'meshes'},
+		{name: 'light', plural_name: 'lights'},
+		{name: 'audio', plural_name: 'audio'}
 	]
 
   def self.default
@@ -52,31 +55,44 @@ module MVML
 		template = {}
 		unless mvml.nil?
 			template = base_template mvml
-			template.merge! scene_objects(mvml['scene']) unless mvml['scene'].nil?
+      template.merge! player_template(mvml['player'] || {})
+			template.merge! scene_template(mvml['scene'] || {})
 		end
 		return template
   end
 
-	def self.scene_objects(scene)
-		template = {}
-		@@object_types.each do |type|
-			template[type[:name]] = scene.select { |object| object.has_key? type[:singular_name] }
-			template[type[:name]].collect! { |object| self.send "new_#{type[:singular_name]}", object }
-		end
-		return template
-	end
-
 	def self.base_template(mvml)
     {
 			'title' => mvml['title'] || @@default[:title],
-			'motd' => mvml['motd'] || @@default[:motd],
-    	'player' => {
-    	  'move_speed' => mvml['player']['move_speed'] || @@default[:move_speed],
-    	  'turn_speed' => mvml['player']['turn_speed'] || @@default[:turn_speed],
-    	  'start' => mvml['player']['start'] || @@default[:start]
-    	}
+			'motd' => mvml['motd'] || @@default[:motd]
 		}
 	end
+
+  def self.player_template(player)
+    {
+      'player' => {
+        'move_speed' => @@default[:move_speed],
+        'turn_speed' => @@default[:turn_speed],
+        'min_jump_speed' => @@default[:min_jump_speed],
+        'max_jump_speed' => @@default[:max_jump_speed],
+        'start' => @@default[:start],
+				'gravity' => @@default[:gravity]
+      }.merge(player)
+    }
+  end
+
+  def self.scene_template(scene)
+    template = {}
+    @@object_types.each do |type|
+      template[type[:plural_name]] = new_scene_objects scene, type[:name]
+    end
+    return template
+  end
+
+  def self.new_scene_objects(scene, type)
+    objects = scene.select { |object| object.has_key? type }
+    objects.collect { |object| self.send "new_#{type}", object }
+  end
 
   def self.get_render_method(model)
     case model
@@ -93,35 +109,33 @@ module MVML
 
   def self.convert_rotation(rotation)
     rotation = rotation.slice(1...-1).gsub(' ', '').split ','
-    rotation.map! do |rotation| 
+    rotation.map! do |rotation|
       rotation.to_f * Math::PI / 180.0
     end
     "(#{ rotation.join ',' })"
   end
 
   def self.new_model(object)
-    rotation = @@default[:rotation]
-    rotation = convert_rotation object['rotation'] unless object['rotation'].nil?
-    color = object['color']
-    color = "\'#{color}\'" if color.class == String
+    object['rotation'] = convert_rotation object['rotation'] unless object['rotation'].nil?
+    object['color'] = "\'#{object['color']}\'" if object['color'].class == String
     {
-      :color => color || @@default[:color],
-      :scale => object['scale'] || @@default[:scale],
-      :position => object['position'] || @@default[:position],
-      :rotation => rotation,
-      :texture => object['texture'] || @@default[:texture]
-    }
+      'color' => @@default[:color],
+      'scale' => @@default[:scale],
+      'position' => @@default[:position],
+      'rotation' => @@default[:rotation],
+      'texture' => @@default[:texture]
+    }.merge object
   end
 
   def self.new_mesh(object)
     {
-      :path => object['mesh']
+      'path' => object['mesh']
     }.merge new_model(object)
   end
 
   def self.new_primitive(object)
     {
-      :render_call => get_render_method(object['primitive']) 
+      'render_call' => get_render_method(object['primitive'])
     }.merge new_model(object)
   end
 
