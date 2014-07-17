@@ -3,8 +3,8 @@
 # Provides:          mvml-server
 # Required-Start:
 # Required-Stop:
-# Default-Start:     3 5
-# Default-Stop:      0 1 2 6
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
 # Short-Description: an mvml server
 # Description:       mvml-server, my fun test server for serving mvml
 ### END INIT INFO
