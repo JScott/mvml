@@ -8,6 +8,7 @@ THREE.FlyControls = function ( camera, mesh ) {
   this.domElement = document;
 
   // API
+  this.height = 1.0;
   this.gravity = 9.8;
   this.movementSpeed = 1.0;
   this.rollSpeed = 0.005;
@@ -183,8 +184,12 @@ THREE.FlyControls = function ( camera, mesh ) {
       vector.normalize().multiplyScalar(distance - collision.theta);
       this.jumping = false;
     }
-    this.camera.position.add(vector);
     this.mesh.position.add(vector);
+    this.mesh.__dirtyPosition = true;
+    this.mesh.rotation.set(0,0,0);
+    this.mesh.__dirtyRotation = true;
+    this.camera.position = this.mesh.position.clone();
+    this.camera.position.add(new THREE.Vector3(0,this.height,0));
   }
 
   this.update = function( delta ) {
@@ -201,7 +206,6 @@ THREE.FlyControls = function ( camera, mesh ) {
     var movement_y = up.clone().multiplyScalar(this.moveVector.y * moveMult);
     this.move(movement_xz);
     this.move(movement_y);
-    this.moveVector.y -= delta * this.gravity;
 
     var matrix = new THREE.Matrix4().makeRotationAxis(right, this.rotationVector.y * rotMult);
     this.lookVector.applyMatrix4(matrix);

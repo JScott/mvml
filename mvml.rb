@@ -24,7 +24,9 @@ module MVML
     :scale => "(1,1,1)",
     :position => "(0,0,0)",
     :rotation => "(0,0,0)",
-    :texture => nil
+    :texture => nil,
+    :physics => true,
+    :mass => 1
   }
 	@@object_types = [
 		{name: 'primitive', plural_name: 'primitives'},
@@ -136,7 +138,9 @@ module MVML
       'scale' => @@default[:scale],
       'position' => @@default[:position],
       'rotation' => @@default[:rotation],
-      'texture' => @@default[:texture]
+      'texture' => @@default[:texture],
+      'physics' => @@default[:physics],
+      'mass' => @@default[:mass]
     }.merge object
   end
 

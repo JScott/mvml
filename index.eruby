@@ -26,7 +26,7 @@
       Physijs.scripts.ammo = '/js/Physijs/ammo.js';
 
       var container;
-      var camera, controls, scene, renderer
+      var camera, controls, scene, renderer;
       var player_mesh;
       var keyboard = new THREEx.KeyboardState();
 
@@ -37,7 +37,7 @@
       var clock = new THREE.Clock();
 
       init();
-      animate();
+      next_frame();
 
       function init() {
         // CONTAINER
@@ -45,7 +45,10 @@
         document.body.appendChild( container );
 
         // SCENE
-        scene = new Physijs.Scene();
+        scene = new Physijs.Scene({
+          reportsize: <%= primitives.length + meshes.length + 1 %>
+        });
+        scene.setGravity(new THREE.Vector3(0, -<%= player['gravity'] %>, 0));
 
         // CAMERA
         var player_height = 5;
@@ -56,8 +59,8 @@
         var far = 20000;
         camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
         scene.add(camera);
-        camera.position.set<%= player['start'] %>;
-        camera.position.y += player_height;
+        //camera.position.set<%= player['start'] %>;
+        //camera.position.y += player_height;
 
         // LIGHT
         var light = new THREE.AmbientLight( "#404040" );
@@ -76,6 +79,8 @@
         var manager = new THREE.LoadingManager();
         var geometry, material;
         <% for prim in primitives %>
+
+        <!-- Primitive: <%= prim['render_call'] %> -->
         geometry = new THREE.<%= prim['render_call'] %>;
         material = new THREE.MeshLambertMaterial({
           <% if prim['texture'].nil? %>
@@ -84,7 +89,12 @@
           map: THREE.ImageUtils.loadTexture('<%= prim['texture'] %>')
           <% end %>
         });
-        obj = new Physijs.<%= prim['bounding'] %>(geometry, material);
+        <!-- <%= prim['physics'] %> -->
+        <% if prim['physics'] %>
+        obj = new Physijs.<%= prim['bounding'] %>(geometry,material,<%= prim['mass'] %>);
+        <% else %>
+        obj = new THREE.Mesh(geometry,material);
+        <% end %>
         obj.position.set<%= prim['position'] %>;
         obj.rotation.set<%= prim['rotation'] %>;
         obj.scale.set<%= prim['scale'] %>;
@@ -94,6 +104,8 @@
         <% unless meshes.empty? %>
         var loader = new THREE.JSONLoader();
         <% for mesh in meshes %>
+
+        <!-- Mesh: <%= mesh['path'] %> -->
         loader.load('<%= mesh['path'] %>', function (geometry) {
           material = new THREE.MeshLambertMaterial({
             <% if mesh['texture'].nil? %>
@@ -102,7 +114,12 @@
             map: THREE.ImageUtils.loadTexture('<%= mesh['texture'] %>')
             <% end %>
           });
-          obj = new Physijs.Mesh(geometry,material);
+          <% if mesh['physics'] %>
+          obj = new Physijs.BoxMesh(geometry,material,<%= mesh['mass'] %>); // TODO: option of ConcaveMesh or ConvexMesh, but BoxMesh by default
+          <% else %>
+          obj = new THREE.Mesh(geometry,material);
+          <% end %>
+          obj
           obj.position.set<%= mesh['position'] %>;
           obj.rotation.set<%= mesh['rotation'] %>;
           obj.scale.set<%= mesh['scale'] %>;
@@ -111,13 +128,16 @@
         });
         <% end %>
         <% end %>
+
+        <!-- Player Mesh -->
         geometry = new THREE.CylinderGeometry(player_width, player_width, player_height*1.2, 12, 5);
         material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe:true });
-        player_mesh = new Physijs.CapsuleMesh(geometry, material);
+        player_mesh = new Physijs.CapsuleMesh(geometry, material, 100);
         player_mesh.position.set<%= player['start'] %>;
         player_mesh.position.y += player_height/2.0;
         //player_mesh.visible = false;
         scene.add(player_mesh);
+        player_mesh.setDamping(0.9,0.9);
         /*var floorTexture = new THREE.ImageUtils.loadTexture( 'images/checkerboard.jpg' );
         floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
         floorTexture.repeat.set( 10, 10 );
@@ -136,9 +156,9 @@
         // CONTROLS
         controls = new THREE.FlyControls( camera, player_mesh );
         controls.domElement = container;
+        controls.height = player_height/2.0;
         controls.movementSpeed = <%= player['move_speed'] %>;
         controls.rollSpeed = <%= player['turn_speed'] %>;
-        controls.gravity = <%= player['gravity'] %>;
         controls.dragToLook = true;
         controls.minJumpSpeed = <%= player['min_jump_speed'] %>;
         controls.maxJumpSpeed = <%= player['max_jump_speed'] %>;
@@ -158,16 +178,11 @@
         camera.updateProjectionMatrix();
       };
 
-      function animate() {
-        requestAnimationFrame( animate );
-        render();
-        scene.simulate();
-        //input();
-      };
-
-      function render() {
-        controls.update( clock.getDelta() );
+      function next_frame() {
+        requestAnimationFrame( next_frame );
         renderer.render( scene, camera );
+        controls.update( clock.getDelta() );
+        scene.simulate();
       };
 
       /*function input() {
