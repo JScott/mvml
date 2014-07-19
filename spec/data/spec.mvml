@@ -4,6 +4,8 @@ motd: This is just a test.
 player:
   move_speed: 15
   turn_speed: 1.5
+  min_jump_speed: 0
+  max_jump_speed: 20
   start: (0,0,30)
   gravity: 30
 scene:

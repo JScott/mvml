@@ -15,10 +15,10 @@ module MVML
 
     :move_speed => 15,
     :turn_speed => 1.5,
-    :min_jump_speed => 1.0,
-    :max_jump_speed => 2.0,
+    :min_jump_speed => 10,
+    :max_jump_speed => 30,
     :start => "(0,0,0)",
-		:gravity => 9.8,
+		:gravity => 50,
 
     :color => 0xffffff,
     :scale => "(1,1,1)",

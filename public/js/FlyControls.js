@@ -24,12 +24,18 @@ THREE.FlyControls = function ( camera, mesh ) {
   this.panStart = new THREE.Vector2(0,0);
   this.mouseDragging = false;
 
-  this.jumping = false;
+  this.mesh.jumping = false;
   this.jumpKeyHeld = false;
   this.moveState = { up: 0, down: 0, left: 0, right: 0, forward: 0, back: 0, pitchUp: 0, pitchDown: 0, yawLeft: 0, yawRight: 0, rollLeft: 0, rollRight: 0 };
   this.moveVector = new THREE.Vector3( 0, 0, 0 );
   this.rotationVector = new THREE.Vector3( 0, 0, 0 );
   this.lookVector = new THREE.Vector3( 0, 0, -1 );
+
+  this.mesh.addEventListener( 'collision', function( other_object, relative_velocity, relative_rotation, contact_normal ) {
+    if (this.getLinearVelocity().y < 0) {
+      this.jumping = false;
+    }
+  });
 
   this.handleEvent = function ( event ) {
     if ( typeof this[ event.type ] == 'function' ) {
@@ -44,12 +50,15 @@ THREE.FlyControls = function ( camera, mesh ) {
     //event.preventDefault();
     switch ( event.keyCode ) {
       case 32: /* space */
-        if (!this.jumping && !this.jumpKeyHeld) {
-          this.moveVector.y = this.maxJumpSpeed;
-          this.jumping = true;
+        if (!this.mesh.jumping && !this.jumpKeyHeld) {
+          this.mesh.setLinearVelocity(new THREE.Vector3(0,this.maxJumpSpeed,0));
+          this.mesh.jumping = true;
           this.jumpKeyHeld = true;
         }
         break;
+
+
+        
 
       case 87: /*W*/ this.moveState.forward = 1; break;
       case 83: /*S*/ this.moveState.back = 1; break;
@@ -63,7 +72,9 @@ THREE.FlyControls = function ( camera, mesh ) {
   this.keyup = function( event ) {
     switch( event.keyCode ) {
       case 32: /* space */
-        this.moveVector.y = Math.min(this.moveVector.y, this.minJumpSpeed);
+        var newVerticalSpeed = Math.min(this.mesh.getLinearVelocity().y, this.minJumpSpeed);
+        this.mesh.setLinearVelocity(new THREE.Vector3(0,newVerticalSpeed,0));
+        this.moveVector.y = 
         this.jumpKeyHeld = false;
         break;
 
@@ -178,13 +189,6 @@ THREE.FlyControls = function ( camera, mesh ) {
   };
 
   this.move = function( vector ) {
-    // TODO: fix for physijs
-    var distance = -1;//this.collision.distance( this.mesh, vector );
-    if (distance > 0) {
-      vector.normalize().multiplyScalar(distance - collision.theta);
-      this.jumping = false;
-    }
-    //this.mesh.applyCentralForce( vector );
     this.mesh.position.add(vector);
     this.mesh.__dirtyPosition = true;
     this.mesh.rotation.set(0,0,0);
@@ -204,9 +208,7 @@ THREE.FlyControls = function ( camera, mesh ) {
     var movement_xz = right.clone().multiplyScalar(this.moveVector.x);
     movement_xz.add( forward.multiplyScalar(-this.moveVector.z) );
     movement_xz.normalize().multiplyScalar(moveMult);
-    var movement_y = up.clone().multiplyScalar(this.moveVector.y * moveMult);
     this.move(movement_xz);
-    this.move(movement_y);
 
     var matrix = new THREE.Matrix4().makeRotationAxis(right, this.rotationVector.y * rotMult);
     this.lookVector.applyMatrix4(matrix);
