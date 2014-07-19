@@ -21,6 +21,9 @@
     </div>
 
     <script>
+      Physijs.scripts.worker = '/Physijs/worker.js';
+      Physijs.scripts.worker = '/Physijs/ammo.js';
+
       var container;
       var camera, controls, scene, renderer
       var player_mesh;
@@ -41,8 +44,7 @@
         document.body.appendChild( container );
 
         // SCENE
-        scene = new THREE.Scene();
-        collision = new THREE.CollisionCommander();
+        scene = new Physijs.Scene();
 
         // CAMERA
         var player_height = 5;
@@ -81,13 +83,12 @@
           map: THREE.ImageUtils.loadTexture('<%= prim['texture'] %>')
           <% end %>
         });
-        obj = new THREE.Mesh(geometry, material);
+        obj = new Physijs.<%= prim['bounding'] %>(geometry, material);
         obj.position.set<%= prim['position'] %>;
         obj.rotation.set<%= prim['rotation'] %>;
         obj.scale.set<%= prim['scale'] %>;
         //obj.geometry.computeFaceNormals();
         scene.add(obj);
-        collision.mesh_list.push(obj);
         <% end %>
         <% unless meshes.empty? %>
         var loader = new THREE.JSONLoader();
@@ -100,22 +101,21 @@
             map: THREE.ImageUtils.loadTexture('<%= mesh['texture'] %>')
             <% end %>
           });
-          obj = new THREE.Mesh(geometry,material);
+          obj = new Physijs.Mesh(geometry,material);
           obj.position.set<%= mesh['position'] %>;
           obj.rotation.set<%= mesh['rotation'] %>;
           obj.scale.set<%= mesh['scale'] %>;
           //obj.geometry.computeFaceNormals();
           scene.add(obj);
-          collision.mesh_list.push(obj);
         });
         <% end %>
         <% end %>
         geometry = new THREE.CylinderGeometry(player_width, player_width, player_height*1.2, 12, 5);
         material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe:true });
-        player_mesh = new THREE.Mesh(geometry, material);
+        player_mesh = new Physijs.CapsuleMesh(geometry, material);
         player_mesh.position.set<%= player['start'] %>;
         player_mesh.position.y += player_height/2.0;
-        player_mesh.visible = false;
+        //player_mesh.visible = false;
         scene.add(player_mesh);
         /*var floorTexture = new THREE.ImageUtils.loadTexture( 'images/checkerboard.jpg' );
         floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
@@ -133,7 +133,7 @@
         container.appendChild( renderer.domElement );
 
         // CONTROLS
-        controls = new THREE.FlyControls( camera, player_mesh, collision );
+        controls = new THREE.FlyControls( camera, player_mesh );
         controls.domElement = container;
         controls.movementSpeed = <%= player['move_speed'] %>;
         controls.rollSpeed = <%= player['turn_speed'] %>;
@@ -160,6 +160,7 @@
       function animate() {
         requestAnimationFrame( animate );
         render();
+        scene.simulate();
         //input();
       };
 

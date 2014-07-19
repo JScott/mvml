@@ -107,6 +107,19 @@ module MVML
     end
   end
 
+  def self.get_bounding_method(model)
+    case model
+    when 'box'
+      "BoxMesh"
+    when 'sphere'
+      "SphereMesh"
+    when 'plane'
+      "BoxMesh" # PlaneMesh is infinite
+    else
+      "BoxMesh"
+    end
+  end
+
   def self.convert_rotation(rotation)
     rotation = rotation.slice(1...-1).gsub(' ', '').split ','
     rotation.map! do |rotation|
