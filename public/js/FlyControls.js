@@ -184,6 +184,7 @@ THREE.FlyControls = function ( camera, mesh ) {
       vector.normalize().multiplyScalar(distance - collision.theta);
       this.jumping = false;
     }
+    //this.mesh.applyCentralForce( vector );
     this.mesh.position.add(vector);
     this.mesh.__dirtyPosition = true;
     this.mesh.rotation.set(0,0,0);

@@ -4,18 +4,23 @@ motd: This is just a test.
 player:
   move_speed: 15
   turn_speed: 1.5
-  min_jump_speed: 0.0
   start: (0,0,30)
   gravity: 30
 scene:
   - primitive: sphere
 
   - primitive: box
+    position: (0, 0, -20)
+    scale: (30,10,1)
+    mass: 0
+    color: 0x00ff00
+
+  - primitive: box
     position: (-10, 1, 0)
     scale: (2,2,4)
     rotation: (0,-30,0)
     color: 0x00ffff
-    physics: false
+    physics: off
 
   - primitive: plane
     position: (0,-2, 0)
