@@ -7,10 +7,11 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     <link rel="stylesheet" type="text/css" href="/css/three.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/three.js/r67/three.min.js"></script>
-    <script src="/js/Detector.js"></script>
-    <script src="/js/THREEx/KeyboardState.js"></script>
-    <script src="/js/FlyControls.js"></script>
-    <script src="/js/CollisionCommander.js"></script>
+    <script src="http://mvml.jvscott.net:6865/js/Physijs/physi.js"></script>
+    <script src="http://mvml.jvscott.net:6865/js/Detector.js"></script>
+    <script src="http://mvml.jvscott.net:6865/js/THREEx/KeyboardState.js"></script>
+    <script src="http://mvml.jvscott.net:6865/js/FlyControls.js"></script>
+    <script src="http://mvml.jvscott.net:6865/js/CollisionCommander.js"></script>
   </head>
 
   <body>
@@ -21,8 +22,8 @@
     </div>
 
     <script>
-      Physijs.scripts.worker = '/Physijs/worker.js';
-      Physijs.scripts.worker = '/Physijs/ammo.js';
+      Physijs.scripts.worker = '/js/Physijs/worker.js';
+      Physijs.scripts.ammo = '/js/Physijs/ammo.js';
 
       var container;
       var camera, controls, scene, renderer

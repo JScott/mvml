@@ -148,7 +148,8 @@ module MVML
 
   def self.new_primitive(object)
     {
-      'render_call' => get_render_method(object['primitive'])
+      'render_call' => get_render_method(object['primitive']),
+      'bounding' => get_bounding_method(object['primitive'])
     }.merge new_model(object)
   end
 
