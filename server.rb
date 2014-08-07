@@ -1,9 +1,12 @@
 require 'sinatra'
 require_relative './mvml'
 
-set :bind, '0.0.0.0'
-set :port, ARGV[0] || 6865
+configure do
+  set :bind, '0.0.0.0'
+  set :port, ARGV[0] || 6865
+end
 
+puts settings.public_folder
 get '/' do
   %Q[
 	<h1>MVML to HTML interpreter</h1>

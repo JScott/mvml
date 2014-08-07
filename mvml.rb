@@ -3,6 +3,8 @@ require 'erubis'
 require 'yaml'
 require 'logger'
 
+CONFIG = YAML.load_file 'config.yaml'
+
 log = Logger.new $stdout
 log.level = Logger::DEBUG
 log.progname = 'MVML'
@@ -41,7 +43,8 @@ module MVML
 
   def self.to_html(mvml_string, output_path=nil)
 		template = parse mvml_string
-		puts @@eruby_path
+		template['content_server'] = CONFIG['content_server']
+    puts @@eruby_path
 		eruby = Erubis::Eruby.new File.read(@@eruby_path)
     html = eruby.result template
     unless output_path.nil?
