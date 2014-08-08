@@ -28,7 +28,7 @@ module MVML
     :rotation => "(0,0,0)",
     :texture => nil,
     :physics => true,
-    :mass => 1
+    :mass => 0
   }
 	@@object_types = [
 		{name: 'primitive', plural_name: 'primitives'},
@@ -44,7 +44,6 @@ module MVML
   def self.to_html(mvml_string, output_path=nil)
 		template = parse mvml_string
 		template['content_server'] = CONFIG['content_server']
-    puts @@eruby_path
 		eruby = Erubis::Eruby.new File.read(@@eruby_path)
     html = eruby.result template
     unless output_path.nil?

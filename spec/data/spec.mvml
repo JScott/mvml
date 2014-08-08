@@ -14,8 +14,8 @@ scene:
   - primitive: box
     position: (0, 0, -20)
     scale: (30,10,1)
-    mass: 0
     color: 0x00ff00
+    mass: 100
 
   - primitive: box
     position: (-10, 1, 0)
@@ -35,4 +35,3 @@ scene:
     position: (10,0,0)
     scale: (0.05, 0.05, 0.05)
     color: red
-    mass: 200
