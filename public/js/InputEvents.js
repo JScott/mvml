@@ -79,47 +79,62 @@ THREE.InputEvents = function ( controller ) {
     this.pan_move(event.pageX, event.pageY, 0);
   };
 
+  this.move_back = function() {
+    controller.moveState.back = 1;
+    controller.moveState.forward = 0;
+    controller.updateMovementVector();
+  }
+  this.move_stop = function() {
+    controller.moveState.back = 0;
+    controller.moveState.forward = 0;
+    controller.updateMovementVector();
+  }
+  this.move_forward = function() {
+    controller.moveState.back = 0;
+    controller.moveState.forward = 1;
+    controller.updateMovementVector();
+  }
+  this.rotate_start = function( yawLeft, pitchDown ) {
+    controller.moveState.yawLeft = yawLeft;
+    controller.moveState.pitchDown = pitchDown;
+    controller.updateRotationVector();
+  }
+  this.rotate_stop = function() {
+    controller.moveState.yawLeft = 0;
+    controller.moveState.pitchDown = 0;
+    controller.updateRotationVector();
+  }
+
   this.pan_move = function(x, y, touches) {
     if ( this.mouseDragging ) {
       var container = this.getContainerDimensions();
       var halfWidth  = container.size[ 0 ] / 2;
       var halfHeight = container.size[ 1 ] / 2;
 
-      controller.moveState.yawLeft   = -( ( x - container.offset[ 0 ] ) - halfWidth  ) / halfWidth;
-      controller.moveState.pitchDown =  ( ( y - container.offset[ 1 ] ) - halfHeight ) / halfHeight;
-
-      controller.updateRotationVector();
+      this.rotate_start(
+        -( ( x - container.offset[ 0 ] ) - halfWidth  ) / halfWidth,
+         ( ( y - container.offset[ 1 ] ) - halfHeight ) / halfHeight
+      );
     }
     else if ( touches == 1 ) {
-      controller.moveState.back = 0;
-      controller.moveStat.forward = 0;
-      controller.updateMovementVector();
+      this.move_stop();
 
       var container = this.getContainerDimensions();
       var halfWidth  = container.size[ 0 ] / 2;
       var halfHeight = container.size[ 1 ] / 2;
 
-      controller.moveStat.yawLeft   = -(this.panStart.x - x) / halfWidth;
-      controller.moveStat.pitchDown =  (this.panStart.y - y) / halfHeight;
-      controller.updateRotationVector();
+      this.rotate_start(
+        -(this.panStart.x - x) / halfWidth,
+         (this.panStart.y - y) / halfHeight
+      );
     }
     else if ( touches == 2 ) {
-      controller.moveStat.yawLeft = 0;
-      controller.moveStat.pitchDown = 0;
-      controller.updateRotationVector();
-
-      controller.moveStat.back = 0;
-      controller.moveStat.forward = 1;
-      controller.updateMovementVector();
+      this.rotate_stop();
+      this.move_forward();
     }
     else if ( touches >= 2 ) {
-      controller.moveStat.yawLeft = 0;
-      controller.moveStat.pitchDown = 0;
-      controller.updateRotationVector();
-
-      controller.moveStat.back = 1;
-      controller.moveStat.forward = 0;
-      controller.updateMovementVector();
+      this.rotate_stop();
+      this.move_back();
     }
   };
 
@@ -137,11 +152,7 @@ THREE.InputEvents = function ( controller ) {
   this.pan_end = function( event ) {
     event.preventDefault();
     event.stopPropagation();
-
-    controller.moveState.forward = controller.moveState.back = 0;
-    controller.moveState.yawLeft = controller.moveState.pitchDown = 0;
-    controller.updateMovementVector();
-    controller.updateRotationVector();
+    this.rotate_stop();
   };
 
   this.getContainerDimensions = function() {
