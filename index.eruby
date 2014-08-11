@@ -9,7 +9,8 @@
     <script src="http://<%= content_server %>/js/Physijs/physi.js"></script>
     <script src="http://<%= content_server %>/js/Detector.js"></script>
     <script src="http://<%= content_server %>/js/THREEx/KeyboardState.js"></script>
-    <script src="http://<%= content_server %>/js/FlyControls.js"></script>
+    <script src="http://<%= content_server %>/js/CharacterController.js"></script>
+    <script src="http://<%= content_server %>/js/InputEvents.js"></script>
     <script src="http://<%= content_server %>/js/CollisionCommander.js"></script>
   </head>
 
@@ -153,14 +154,15 @@
         container.appendChild( renderer.domElement );
 
         // CONTROLS
-        controls = new THREE.FlyControls( camera, player_mesh );
-        controls.domElement = container;
-        controls.height = player_height/2.0;
-        controls.movementSpeed = <%= player['move_speed'] %>;
-        controls.rollSpeed = <%= player['turn_speed'] %>;
-        controls.dragToLook = true;
-        controls.minJumpSpeed = <%= player['min_jump_speed'] %>;
-        controls.maxJumpSpeed = <%= player['max_jump_speed'] %>;
+        character = new THREE.CharacterController( camera, player_mesh );
+        character.height = player_height/2.0;
+        character.movementSpeed = <%= player['move_speed'] %>;
+        character.rollSpeed = <%= player['turn_speed'] %>;
+        character.dragToLook = true;
+        character.minJumpSpeed = <%= player['min_jump_speed'] %>;
+        character.maxJumpSpeed = <%= player['max_jump_speed'] %>;
+        input = new THREE.InputEvents( character );
+        //input.domElement = container;
 
         // EVENTS
         //THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
@@ -180,7 +182,7 @@
       function next_frame() {
         requestAnimationFrame( next_frame );
         renderer.render( scene, camera );
-        controls.update( clock.getDelta() );
+        character.update( clock.getDelta() );
         scene.simulate();
       };
 
