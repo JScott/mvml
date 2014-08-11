@@ -1,7 +1,6 @@
 // Original FlyControls by James Baicoianu (http://www.baicoianu.com/)
 
 THREE.FlyControls = function ( camera, mesh ) {
-
   this.camera = camera;
   this.mesh = mesh;
 
@@ -18,9 +17,6 @@ THREE.FlyControls = function ( camera, mesh ) {
   // disable default target object behavior
 
   // internals
-
-  this.tmpQuaternion = new THREE.Quaternion();
-
   this.panStart = new THREE.Vector2(0,0);
   this.mouseDragging = false;
 
@@ -32,9 +28,10 @@ THREE.FlyControls = function ( camera, mesh ) {
   this.lookVector = new THREE.Vector3( 0, 0, -1 );
 
   this.mesh.addEventListener( 'collision', function( other_object, relative_velocity, relative_rotation, contact_normal ) {
-    if (this.getLinearVelocity().y < 0) {
+    // TODO: Use cross product instead to check if the collision surface slope angle was < 45 degrees
+    //if (this.getLinearVelocity().y < 1) {
       this.jumping = false;
-    }
+    //}
   });
 
   this.handleEvent = function ( event ) {
@@ -42,6 +39,21 @@ THREE.FlyControls = function ( camera, mesh ) {
       this[ event.type ]( event );
     }
   };
+
+  this.setJumping = function(start) {
+    if (start) {
+      this.mesh.setLinearVelocity(this.mesh.getLinearVelocity().setY(this.maxJumpSpeed));
+      this.mesh.jumping = true;
+      this.jumpKeyHeld = true;
+    }
+    else {
+      var newJumpSpeed = Math.min(this.mesh.getLinearVelocity().y, this.minJumpSpeed);
+      this.mesh.setLinearVelocity(this.mesh.getLinearVelocity().setY(newJumpSpeed));
+      this.jumpKeyHeld = false;
+    }
+    //this.update( 1 );
+    //console.log(start + "..." + this.mesh.getLinearVelocity().y);
+  }
 
   this.keydown = function( event ) {
     if ( event.altKey ) {
@@ -51,9 +63,7 @@ THREE.FlyControls = function ( camera, mesh ) {
     switch ( event.keyCode ) {
       case 32: /* space */
         if (!this.mesh.jumping && !this.jumpKeyHeld) {
-          this.mesh.setLinearVelocity(new THREE.Vector3(0,this.maxJumpSpeed,0));
-          this.mesh.jumping = true;
-          this.jumpKeyHeld = true;
+          this.setJumping(true);
         }
         break;
       case 87: /*W*/ this.moveState.forward = 1; break;
@@ -68,9 +78,7 @@ THREE.FlyControls = function ( camera, mesh ) {
   this.keyup = function( event ) {
     switch( event.keyCode ) {
       case 32: /* space */
-        var newVerticalSpeed = Math.min(this.mesh.getLinearVelocity().y, this.minJumpSpeed);
-        this.mesh.setLinearVelocity(new THREE.Vector3(0,newVerticalSpeed,0));
-        this.jumpKeyHeld = false;
+        this.setJumping(false);
         break;
       case 87: /*W*/ this.moveState.forward = 0; break;
       case 83: /*S*/ this.moveState.back = 0; break;
@@ -182,9 +190,15 @@ THREE.FlyControls = function ( camera, mesh ) {
     this.updateRotationVector();
   };
 
-  this.move = function( vector ) {
-    vector.y = this.mesh.getLinearVelocity().y;
-    this.mesh.setLinearVelocity(vector);
+  this.move_xz = function( vector ) {
+    // FIX: this isn't properly setting the Y velocity for jumping
+    //      it only works a minority of the time
+    //      and I'd wager it's because it's async with the key presses
+    //   oddly enough, it seems to work consistently when I run off the fallen space invader
+    //   so maybe I'm way off with the diagnosis
+    vector.setY(this.mesh.getLinearVelocity().y);
+    this.mesh.setLinearVelocity( vector );
+
     this.mesh.rotation.set(0,0,0);
     this.mesh.__dirtyRotation = true;
     
@@ -203,7 +217,7 @@ THREE.FlyControls = function ( camera, mesh ) {
     var movement_xz = right.clone().multiplyScalar(this.moveVector.x);
     movement_xz.add( forward.multiplyScalar(-this.moveVector.z) );
     movement_xz.normalize().multiplyScalar(moveMult);
-    this.move(movement_xz);
+    this.move_xz(movement_xz);
 
     var matrix = new THREE.Matrix4().makeRotationAxis(right, this.rotationVector.y * rotMult);
     this.lookVector.applyMatrix4(matrix);
