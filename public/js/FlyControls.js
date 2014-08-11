@@ -56,10 +56,6 @@ THREE.FlyControls = function ( camera, mesh ) {
           this.jumpKeyHeld = true;
         }
         break;
-
-
-        
-
       case 87: /*W*/ this.moveState.forward = 1; break;
       case 83: /*S*/ this.moveState.back = 1; break;
       case 65: /*A*/ this.moveState.left = 1; break;
@@ -74,10 +70,8 @@ THREE.FlyControls = function ( camera, mesh ) {
       case 32: /* space */
         var newVerticalSpeed = Math.min(this.mesh.getLinearVelocity().y, this.minJumpSpeed);
         this.mesh.setLinearVelocity(new THREE.Vector3(0,newVerticalSpeed,0));
-        this.moveVector.y = 
         this.jumpKeyHeld = false;
         break;
-
       case 87: /*W*/ this.moveState.forward = 0; break;
       case 83: /*S*/ this.moveState.back = 0; break;
       case 65: /*A*/ this.moveState.left = 0; break;
@@ -189,16 +183,17 @@ THREE.FlyControls = function ( camera, mesh ) {
   };
 
   this.move = function( vector ) {
-    this.mesh.position.add(vector);
-    this.mesh.__dirtyPosition = true;
+    vector.y = this.mesh.getLinearVelocity().y;
+    this.mesh.setLinearVelocity(vector);
     this.mesh.rotation.set(0,0,0);
     this.mesh.__dirtyRotation = true;
+    
     this.camera.position = this.mesh.position.clone();
     this.camera.position.add(new THREE.Vector3(0,this.height,0));
   }
 
   this.update = function( delta ) {
-    var moveMult = delta * this.movementSpeed;
+    var moveMult = this.movementSpeed; // Physijs handles time delta
     var rotMult = delta * this.rollSpeed;
     var forward = this.lookVector.clone().setY(0);
     var up = new THREE.Vector3(0,1,0);
@@ -214,7 +209,6 @@ THREE.FlyControls = function ( camera, mesh ) {
     this.lookVector.applyMatrix4(matrix);
     matrix = new THREE.Matrix4().makeRotationY(this.rotationVector.x * rotMult);
     this.lookVector.applyMatrix4(matrix);
-
     this.camera.lookAt(this.lookVector.clone().add(this.camera.position));
   };
 
