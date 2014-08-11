@@ -22,7 +22,10 @@ THREE.FlyControls = function ( camera, mesh ) {
 
   this.mesh.jumping = false;
   this.jumpKeyHeld = false;
-  this.moveState = { up: 0, down: 0, left: 0, right: 0, forward: 0, back: 0, pitchUp: 0, pitchDown: 0, yawLeft: 0, yawRight: 0, rollLeft: 0, rollRight: 0 };
+  this.moveState = {
+    up: 0, down: 0, left: 0, right: 0, forward: 0, back: 0,
+    pitchUp: 0, pitchDown: 0, yawLeft: 0, yawRight: 0, rollLeft: 0, rollRight: 0
+  };
   this.moveVector = new THREE.Vector3( 0, 0, 0 );
   this.rotationVector = new THREE.Vector3( 0, 0, 0 );
   this.lookVector = new THREE.Vector3( 0, 0, -1 );
@@ -41,6 +44,7 @@ THREE.FlyControls = function ( camera, mesh ) {
   };
 
   this.setJumping = function(start) {
+    return; // DISABLED until jumping works
     if (start) {
       this.mesh.setLinearVelocity(this.mesh.getLinearVelocity().setY(this.maxJumpSpeed));
       this.mesh.jumping = true;
@@ -51,8 +55,6 @@ THREE.FlyControls = function ( camera, mesh ) {
       this.mesh.setLinearVelocity(this.mesh.getLinearVelocity().setY(newJumpSpeed));
       this.jumpKeyHeld = false;
     }
-    //this.update( 1 );
-    //console.log(start + "..." + this.mesh.getLinearVelocity().y);
   }
 
   this.keydown = function( event ) {
@@ -190,12 +192,7 @@ THREE.FlyControls = function ( camera, mesh ) {
     this.updateRotationVector();
   };
 
-  this.move_xz = function( vector ) {
-    // FIX: this isn't properly setting the Y velocity for jumping
-    //      it only works a minority of the time
-    //      and I'd wager it's because it's async with the key presses
-    //   oddly enough, it seems to work consistently when I run off the fallen space invader
-    //   so maybe I'm way off with the diagnosis
+  this.move = function( vector ) {
     vector.setY(this.mesh.getLinearVelocity().y);
     this.mesh.setLinearVelocity( vector );
 
@@ -217,7 +214,7 @@ THREE.FlyControls = function ( camera, mesh ) {
     var movement_xz = right.clone().multiplyScalar(this.moveVector.x);
     movement_xz.add( forward.multiplyScalar(-this.moveVector.z) );
     movement_xz.normalize().multiplyScalar(moveMult);
-    this.move_xz(movement_xz);
+    this.move(movement_xz);
 
     var matrix = new THREE.Matrix4().makeRotationAxis(right, this.rotationVector.y * rotMult);
     this.lookVector.applyMatrix4(matrix);
@@ -229,16 +226,12 @@ THREE.FlyControls = function ( camera, mesh ) {
   this.updateMovementVector = function() {
     this.moveVector.x = ( this.moveState.right - this.moveState.left );
     this.moveVector.z = ( this.moveState.back - this.moveState.forward );
-
-    //console.log( 'move:', [ this.moveVector.x, this.moveVector.y, this.moveVector.z ] );
   };
 
   this.updateRotationVector = function() {
     this.rotationVector.y = ( -this.moveState.pitchDown + this.moveState.pitchUp );
     this.rotationVector.x = ( -this.moveState.yawRight  + this.moveState.yawLeft );
     this.rotationVector.z = ( -this.moveState.rollRight + this.moveState.rollLeft );
-
-    //console.log( 'rotate:', [ this.rotationVector.x, this.rotationVector.y, this.rotationVector.z ] );
   };
 
   this.getContainerDimensions = function() {
