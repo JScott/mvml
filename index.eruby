@@ -59,8 +59,6 @@
         var far = 20000;
         camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
         scene.add(camera);
-        //camera.position.set<%= player['start'] %>;
-        //camera.position.y += player_height;
 
         // LIGHT
         var light = new THREE.AmbientLight( "#404040" );
