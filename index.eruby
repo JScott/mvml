@@ -133,7 +133,7 @@
         player_mesh = new Physijs.CapsuleMesh(geometry, material, 100);
         player_mesh.position.set<%= player['start'] %>;
         player_mesh.position.y += player_height/2.0;
-        //player_mesh.visible = false;
+        player_mesh.visible = false;
         scene.add(player_mesh);
         player_mesh.setDamping(0.9,0.9);
         /*var floorTexture = new THREE.ImageUtils.loadTexture( 'images/checkerboard.jpg' );
