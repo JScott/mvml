@@ -4,7 +4,7 @@
     <title><%= title %></title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="/css/three.css">
+    <link rel="stylesheet" type="text/css" href="http://<%= content_server %>/css/three.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/three.js/r67/three.min.js"></script>
     <script src="http://<%= content_server %>/js/Physijs/physi.js"></script>
     <script src="http://<%= content_server %>/js/Detector.js"></script>
@@ -16,10 +16,10 @@
 
   <body>
 
-    <div id="info"><br/><%= motd %><br/><br/>
+    <!--<div id="info"><br/><%= motd %><br/><br/>
     Desktop: <b>WASD</b> move, <b>mouse|arrow</b> pan<br/>
     Touch: <b>1 finger</b> pan, <b>2</b> forward, <b>3</b> backward<br/>
-    </div>
+    </div>-->
 
     <script>
       Physijs.scripts.worker = '/js/Physijs/worker.js';
