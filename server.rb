@@ -1,5 +1,5 @@
 require 'sinatra'
-#require 'sinatra/cross_origin'
+require 'sinatra/cross_origin'
 require_relative './mvml'
 
 configure do
