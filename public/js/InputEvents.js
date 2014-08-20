@@ -20,10 +20,18 @@ THREE.InputEvents = function ( controller ) {
           controller.setJumping(true);
         }
         break;
-      case 87: /*W*/ controller.moveState.forward = 1; break;
-      case 83: /*S*/ controller.moveState.back = 1; break;
-      case 65: /*A*/ controller.moveState.left = 1; break;
-      case 68: /*D*/ controller.moveState.right = 1; break;
+      //case 38: /*up*/
+      case 87: /*W*/
+        controller.moveState.forward = 1; break;
+      //case 40: /*down*/
+      case 83: /*S*/
+        controller.moveState.back = 1; break;
+      //case 37: /*left*/
+      case 65: /*A*/
+        controller.moveState.left = 1; break;
+      //case 39: /*right*/
+      case 68: /*D*/
+        controller.moveState.right = 1; break;
     }
     controller.updateMovementVector();
     controller.updateRotationVector();
@@ -34,10 +42,18 @@ THREE.InputEvents = function ( controller ) {
       case 32: /* space */
         controller.setJumping(false);
         break;
-      case 87: /*W*/ controller.moveState.forward = 0; break;
-      case 83: /*S*/ controller.moveState.back = 0; break;
-      case 65: /*A*/ controller.moveState.left = 0; break;
-      case 68: /*D*/ controller.moveState.right = 0; break;
+      //case 38: /*up*/
+      case 87: /*W*/
+        controller.moveState.forward = 0; break;
+      //case 40: /*down*/
+      case 83: /*S*/
+        controller.moveState.back = 0; break;
+      //case 37: /*left*/
+      case 65: /*A*/
+        controller.moveState.left = 0; break;
+      //case 39: /*right*/
+      case 68: /*D*/
+        controller.moveState.right = 0; break;
     }
     controller.updateMovementVector();
     controller.updateRotationVector();
@@ -55,8 +71,8 @@ THREE.InputEvents = function ( controller ) {
   };
 
   this.pan_start = function( event, touch ) {
-    event.preventDefault();
-    event.stopPropagation();
+    //event.preventDefault();
+    //event.stopPropagation();
     var touch_passed = arguments.length > 1
     var x = touch_passed ? touch.pageX : event.pageX;
     var y = touch_passed ? touch.pageY : event.pageY;
@@ -150,8 +166,8 @@ THREE.InputEvents = function ( controller ) {
   };
 
   this.pan_end = function( event ) {
-    event.preventDefault();
-    event.stopPropagation();
+    //event.preventDefault();
+    //event.stopPropagation();
     this.rotate_stop();
   };
 
