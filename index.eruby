@@ -1,28 +1,32 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <title><%= title %></title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="/css/three.css">
+    <link rel="stylesheet" type="text/css" href="http://<%= content_server %>/css/three.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/three.js/r67/three.min.js"></script>
-    <script src="/js/Detector.js"></script>
-    <script src="/js/THREEx/KeyboardState.js"></script>
-    <script src="/js/FlyControls.js"></script>
-    <script src="/js/CollisionCommander.js"></script>
+    <script src="http://<%= content_server %>/js/Physijs/physi.js"></script>
+    <script src="http://<%= content_server %>/js/Detector.js"></script>
+    <script src="http://<%= content_server %>/js/THREEx/KeyboardState.js"></script>
+    <script src="http://<%= content_server %>/js/CharacterController.js"></script>
+    <script src="http://<%= content_server %>/js/InputEvents.js"></script>
+    <script src="http://<%= content_server %>/js/CollisionCommander.js"></script>
   </head>
 
   <body>
 
-    <div id="info"><br/><%= motd %><br/><br/>
+    <!--<div id="info"><br/><%= motd %><br/><br/>
     Desktop: <b>WASD</b> move, <b>mouse|arrow</b> pan<br/>
     Touch: <b>1 finger</b> pan, <b>2</b> forward, <b>3</b> backward<br/>
-    </div>
+    </div>-->
 
     <script>
+      Physijs.scripts.worker = '/js/Physijs/worker.js';
+      Physijs.scripts.ammo = '/js/Physijs/ammo.js';
+
       var container;
-      var camera, controls, scene, renderer
+      var camera, controls, scene, renderer;
       var player_mesh;
       var keyboard = new THREEx.KeyboardState();
 
@@ -33,7 +37,7 @@
       var clock = new THREE.Clock();
 
       init();
-      animate();
+      next_frame();
 
       function init() {
         // CONTAINER
@@ -41,8 +45,10 @@
         document.body.appendChild( container );
 
         // SCENE
-        scene = new THREE.Scene();
-        collision = new THREE.CollisionCommander();
+        scene = new Physijs.Scene({
+          reportsize: <%= primitives.length + meshes.length + 1 %>
+        });
+        scene.setGravity(new THREE.Vector3(0, -<%= player['gravity'] %>, 0));
 
         // CAMERA
         var player_height = 5;
@@ -53,8 +59,6 @@
         var far = 20000;
         camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
         scene.add(camera);
-        camera.position.set<%= player['start'] %>;
-        camera.position.y += player_height;
 
         // LIGHT
         var light = new THREE.AmbientLight( "#404040" );
@@ -73,6 +77,8 @@
         var manager = new THREE.LoadingManager();
         var geometry, material;
         <% for prim in primitives %>
+
+        <!-- Primitive: <%= prim['render_call'] %> -->
         geometry = new THREE.<%= prim['render_call'] %>;
         material = new THREE.MeshLambertMaterial({
           <% if prim['texture'].nil? %>
@@ -81,17 +87,23 @@
           map: THREE.ImageUtils.loadTexture('<%= prim['texture'] %>')
           <% end %>
         });
-        obj = new THREE.Mesh(geometry, material);
+        <!-- <%= prim['physics'] %> -->
+        <% if prim['physics'] %>
+        obj = new Physijs.<%= prim['bounding'] %>(geometry,material,<%= prim['mass'] %>);
+        <% else %>
+        obj = new THREE.Mesh(geometry,material);
+        <% end %>
         obj.position.set<%= prim['position'] %>;
         obj.rotation.set<%= prim['rotation'] %>;
         obj.scale.set<%= prim['scale'] %>;
         //obj.geometry.computeFaceNormals();
         scene.add(obj);
-        collision.mesh_list.push(obj);
         <% end %>
         <% unless meshes.empty? %>
         var loader = new THREE.JSONLoader();
         <% for mesh in meshes %>
+
+        <!-- Mesh: <%= mesh['path'] %> -->
         loader.load('<%= mesh['path'] %>', function (geometry) {
           material = new THREE.MeshLambertMaterial({
             <% if mesh['texture'].nil? %>
@@ -100,23 +112,30 @@
             map: THREE.ImageUtils.loadTexture('<%= mesh['texture'] %>')
             <% end %>
           });
+          <% if mesh['physics'] %>
+          obj = new Physijs.BoxMesh(geometry,material,<%= mesh['mass'] %>); // TODO: option of ConcaveMesh or ConvexMesh, but BoxMesh by default
+          <% else %>
           obj = new THREE.Mesh(geometry,material);
+          <% end %>
+          obj
           obj.position.set<%= mesh['position'] %>;
           obj.rotation.set<%= mesh['rotation'] %>;
           obj.scale.set<%= mesh['scale'] %>;
           //obj.geometry.computeFaceNormals();
           scene.add(obj);
-          collision.mesh_list.push(obj);
         });
         <% end %>
         <% end %>
+
+        <!-- Player Mesh -->
         geometry = new THREE.CylinderGeometry(player_width, player_width, player_height*1.2, 12, 5);
         material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe:true });
-        player_mesh = new THREE.Mesh(geometry, material);
+        player_mesh = new Physijs.CapsuleMesh(geometry, material, 100);
         player_mesh.position.set<%= player['start'] %>;
         player_mesh.position.y += player_height/2.0;
         player_mesh.visible = false;
         scene.add(player_mesh);
+        player_mesh.setDamping(0.9,0.9);
         /*var floorTexture = new THREE.ImageUtils.loadTexture( 'images/checkerboard.jpg' );
         floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
         floorTexture.repeat.set( 10, 10 );
@@ -133,14 +152,15 @@
         container.appendChild( renderer.domElement );
 
         // CONTROLS
-        controls = new THREE.FlyControls( camera, player_mesh, collision );
-        controls.domElement = container;
-        controls.movementSpeed = <%= player['move_speed'] %>;
-        controls.rollSpeed = <%= player['turn_speed'] %>;
-        controls.gravity = <%= player['gravity'] %>;
-        controls.dragToLook = true;
-        controls.minJumpSpeed = <%= player['min_jump_speed'] %>;
-        controls.maxJumpSpeed = <%= player['max_jump_speed'] %>;
+        character = new THREE.CharacterController( camera, player_mesh );
+        character.height = player_height/2.0;
+        character.movementSpeed = <%= player['move_speed'] %>;
+        character.rollSpeed = <%= player['turn_speed'] %>;
+        character.dragToLook = true;
+        character.minJumpSpeed = <%= player['min_jump_speed'] %>;
+        character.maxJumpSpeed = <%= player['max_jump_speed'] %>;
+        input = new THREE.InputEvents( character );
+        //input.domElement = container;
 
         // EVENTS
         //THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
@@ -157,15 +177,11 @@
         camera.updateProjectionMatrix();
       };
 
-      function animate() {
-        requestAnimationFrame( animate );
-        render();
-        //input();
-      };
-
-      function render() {
-        controls.update( clock.getDelta() );
+      function next_frame() {
+        requestAnimationFrame( next_frame );
         renderer.render( scene, camera );
+        character.update( clock.getDelta() );
+        scene.simulate();
       };
 
       /*function input() {

@@ -58,9 +58,11 @@ describe MVML do
         expect(subject).to include '<title>'
       end
       it 'generates player rules' do
-        expect(subject).to include "controls.movementSpeed"
-        expect(subject).to include "controls.rollSpeed"
-        expect(subject).to include "camera.position.set"
+        expect(subject).to include ".position.set(0,0,30)"
+        expect(subject).to include ".movementSpeed = 15"
+        expect(subject).to include ".rollSpeed = 1.5"
+        expect(subject).to include ".minJumpSpeed = 0"
+        expect(subject).to include ".maxJumpSpeed = 20"
       end
       it 'generates one of each primitive' do
         expect(subject).to include 'BoxGeometry'

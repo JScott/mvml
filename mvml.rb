@@ -3,6 +3,8 @@ require 'erubis'
 require 'yaml'
 require 'logger'
 
+CONFIG = YAML.load_file 'config.yaml'
+
 log = Logger.new $stdout
 log.level = Logger::DEBUG
 log.progname = 'MVML'
@@ -15,16 +17,18 @@ module MVML
 
     :move_speed => 15,
     :turn_speed => 1.5,
-    :min_jump_speed => 1.0,
-    :max_jump_speed => 2.0,
+    :min_jump_speed => 10,
+    :max_jump_speed => 30,
     :start => "(0,0,0)",
-		:gravity => 9.8,
+		:gravity => 50,
 
     :color => 0xffffff,
     :scale => "(1,1,1)",
     :position => "(0,0,0)",
     :rotation => "(0,0,0)",
-    :texture => nil
+    :texture => nil,
+    :physics => true,
+    :mass => 0
   }
 	@@object_types = [
 		{name: 'primitive', plural_name: 'primitives'},
@@ -39,7 +43,7 @@ module MVML
 
   def self.to_html(mvml_string, output_path=nil)
 		template = parse mvml_string
-		puts @@eruby_path
+		template['content_server'] = CONFIG['content_server']
 		eruby = Erubis::Eruby.new File.read(@@eruby_path)
     html = eruby.result template
     unless output_path.nil?
@@ -107,6 +111,19 @@ module MVML
     end
   end
 
+  def self.get_bounding_method(model)
+    case model
+    when 'box'
+      "BoxMesh"
+    when 'sphere'
+      "SphereMesh"
+    when 'plane'
+      "BoxMesh" # PlaneMesh is infinite
+    else
+      "BoxMesh"
+    end
+  end
+
   def self.convert_rotation(rotation)
     rotation = rotation.slice(1...-1).gsub(' ', '').split ','
     rotation.map! do |rotation|
@@ -123,7 +140,9 @@ module MVML
       'scale' => @@default[:scale],
       'position' => @@default[:position],
       'rotation' => @@default[:rotation],
-      'texture' => @@default[:texture]
+      'texture' => @@default[:texture],
+      'physics' => @@default[:physics],
+      'mass' => @@default[:mass]
     }.merge object
   end
 
@@ -135,7 +154,8 @@ module MVML
 
   def self.new_primitive(object)
     {
-      'render_call' => get_render_method(object['primitive'])
+      'render_call' => get_render_method(object['primitive']),
+      'bounding' => get_bounding_method(object['primitive'])
     }.merge new_model(object)
   end
 
