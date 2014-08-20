@@ -9,29 +9,29 @@ player:
   start: (0,0,30)
   gravity: 30
 scene:
-  - primitive: sphere
+- primitive: sphere
 
-  - primitive: box
-    position: (0, 0, -20)
-    scale: (30,10,1)
-    color: 0x00ff00
-    mass: 100
+- primitive: box
+  position: (0, 0, -20)
+  scale: (30,10,1)
+  color: 0x00ff00
+  mass: 100
 
-  - primitive: box
-    position: (-10, 1, 0)
-    scale: (2,2,4)
-    rotation: (0,-30,0)
-    color: 0x00ffff
-    physics: off
+- primitive: box
+  position: (-10, 1, 0)
+  scale: (2,2,4)
+  rotation: (0,-30,0)
+  color: 0x00ffff
+  physics: off
 
-  - primitive: plane
-    position: (0,-2, 0)
-    scale: (200,200,1)
-    rotation: (-90,0,0)
-    texture: /images/grass.jpg
-    mass: 0
+- primitive: plane
+  position: (0,-2, 0)
+  scale: (200,200,1)
+  rotation: (-90,0,0)
+  texture: /images/grass.jpg
+  mass: 0
 
-  - mesh: /models/invader.obj.js
-    position: (10,0,0)
-    scale: (0.05, 0.05, 0.05)
-    color: red
+- mesh: /models/invader.obj.js
+  position: (10,0,0)
+  scale: (0.05, 0.05, 0.05)
+  color: red
