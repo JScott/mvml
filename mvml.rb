@@ -3,7 +3,8 @@ require 'erubis'
 require 'yaml'
 require 'logger'
 
-CONFIG = YAML.load_file 'config.yaml'
+config_path = "#{File.expand_path File.dirname(__FILE__)}/config.yaml"
+CONFIG = YAML.load_file config_path
 
 log = Logger.new $stdout
 log.level = Logger::DEBUG
