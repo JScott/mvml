@@ -10,7 +10,7 @@ end
 
 options '/' do
   response.headers["Access-Control-Allow-Access"] = "*"
-  response.headers["Access-Control-Allow-Methods"] = ["POST"]
+  response.headers["Access-Control-Allow-Methods"] = ["POST","GET"]
   response.headers["Access-Control-Allow-Headers"] = "Content-Type"
 end
 
