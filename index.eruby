@@ -12,6 +12,7 @@
     <script src="http://<%= content_server %>/js/CharacterController.js"></script>
     <script src="http://<%= content_server %>/js/InputEvents.js"></script>
     <script src="http://<%= content_server %>/js/CollisionCommander.js"></script>
+    <script src="http://<%= content_server %>/js/FetchBlob.js"></script>
   </head>
 
   <body>
@@ -22,8 +23,12 @@
     </div>-->
 
     <script>
-      Physijs.scripts.worker = '/js/Physijs/worker.js';
-      Physijs.scripts.ammo = '/js/Physijs/ammo.js';
+      // new Worker() doesn't work like XMLHttpRequest for some reason - http://jsfiddle.net/prz0oqy7/2/
+      // I have to use blobs to pass the data through instead - http://stackoverflow.com/questions/10343913/how-to-create-a-web-worker-from-a-string
+      var worker_blob = get_blob('http://<%= content_server %>/physijs_worker');
+      var ammo_blob = get_blob('http://<%= content_server %>/ammo_worker');
+      Physijs.scripts.worker = URL.createObjectURL(worker_blob);
+      Physijs.scripts.ammo = URL.createObjectURL(ammo_blob);
 
       var container;
       var camera, controls, scene, renderer;
