@@ -17,6 +17,7 @@ get '/' do
 end
 
 post '/' do
+  cross_origin
   request.body.rewind
   mvml = request.body.read
   # TODO: don't crash on bad data
