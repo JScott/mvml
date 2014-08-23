@@ -5,6 +5,12 @@ require_relative './mvml'
 configure do
   set :bind, '0.0.0.0'
   set :port, ARGV[0] || 6865
+  enable :cross_origin
+end
+
+options '*' do
+  cross_origin
+  halt 200
 end
 
 get '/' do
@@ -17,7 +23,6 @@ get '/' do
 end
 
 post '/' do
-  cross_origin
   request.body.rewind
   mvml = request.body.read
   # TODO: don't crash on bad data
@@ -26,17 +31,14 @@ post '/' do
 end
 
 get '/api' do
-  cross_origin
   send_file "#{settings.root}/public/js/mvml-api.js"  
 end
 
 get '/physijs_worker' do
-  cross_origin
   send_file "#{settings.root}/public/js/Physijs/worker.js"
 end
 
 get '/ammo_worker' do
-  cross_origin
   send_file "#{settings.root}/public/js/Physijs/ammo.js"
 end
 
