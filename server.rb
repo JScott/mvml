@@ -24,6 +24,11 @@ post '/' do
   MVML.to_html mvml
 end
 
+get '/api' do
+  cross_origin
+  send_file "#{settings.root}/public/js/mvml-api.js"  
+end
+
 get '/physijs_worker' do
   cross_origin
   send_file "#{settings.root}/public/js/Physijs/worker.js"
