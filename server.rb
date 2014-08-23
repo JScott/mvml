@@ -43,6 +43,5 @@ get '/ammo_worker' do
 end
 
 get '/spec' do
-  cross_origin    
   send_file "#{settings.root}/spec/data/spec.mvml", :type => 'text/mvml'
 end
