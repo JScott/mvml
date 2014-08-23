@@ -12,6 +12,7 @@
     <script src="http://<%= content_server %>/js/CharacterController.js"></script>
     <script src="http://<%= content_server %>/js/InputEvents.js"></script>
     <script src="http://<%= content_server %>/js/CollisionCommander.js"></script>
+    <script src="http://<%= content_server %>/js/FetchBlob.js"></script>
   </head>
 
   <body>
@@ -22,38 +23,12 @@
     </div>-->
 
     <script>
-      var worker, ammo;
-      var worker_get = new XMLHttpRequest();
-      worker_get.open("GET", 'http://<%= content_server %>/physijs_worker', false);
-      worker_get.onreadystatechange = function() {
-        if(worker_get.readyState == 4 && worker_get.status == 200) {
-          worker = worker_get.responseText;
-        }
-      }
-      worker_get.send();
-      var ammo_get = new XMLHttpRequest();
-      ammo_get.open("GET", 'http://<%= content_server %>/ammo_worker', false);
-      ammo_get.onreadystatechange = function() {
-        if(ammo_get.readyState == 4 && ammo_get.status == 200) {
-          ammo = ammo_get.responseText;
-        }
-      }
-      ammo_get.send();
-      var worker_blob, ammo_blob;
-      try {
-        worker_blob = new Blob([worker], {type: 'application/javascript'});
-        ammo_blob = new Blob([ammo], {type: 'application/javascript'});
-      } catch (e) { // Backwards-compatibility
-        window.BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder;
-        worker_blob = new BlobBuilder();
-        worker_blob.append(worker);
-        worker_blob = blob.getBlob();
-        ammo_blob = new BlobBuilder();
-        ammo_blob.append(ammo);
-        ammo_blob = blob.getBlob();
-      }
-      Physijs.scripts.worker = URL.createObjectURL(worker_blob); //'http://<%= content_server %>/physijs_worker';
-      Physijs.scripts.ammo = URL.createObjectURL(ammo_blob); //'http://<%= content_server %>/ammo_worker';
+      // new Worker() doesn't work like XMLHttpRequest for some reason - http://jsfiddle.net/prz0oqy7/2/
+      // I have to use blobs to pass the data through instead - http://stackoverflow.com/questions/10343913/how-to-create-a-web-worker-from-a-string
+      var worker_blob = get_blob('http://<%= content_server %>/physijs_worker');
+      var ammo_blob = get_blob('http://<%= content_server %>/ammo_worker');
+      Physijs.scripts.worker = URL.createObjectURL(worker_blob);
+      Physijs.scripts.ammo = URL.createObjectURL(ammo_blob);
 
       var container;
       var camera, controls, scene, renderer;
