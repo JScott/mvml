@@ -5,6 +5,12 @@ require_relative './mvml'
 configure do
   set :bind, '0.0.0.0'
   set :port, ARGV[0] || 6865
+  enable :cross_origin
+end
+
+options '*' do
+  cross_origin
+  halt 200
 end
 
 get '/' do
@@ -24,13 +30,15 @@ post '/' do
   MVML.to_html mvml
 end
 
+get '/api' do
+  send_file "#{settings.root}/public/js/mvml-api.js"  
+end
+
 get '/physijs_worker' do
-  cross_origin
   send_file "#{settings.root}/public/js/Physijs/worker.js"
 end
 
 get '/ammo_worker' do
-  cross_origin
   send_file "#{settings.root}/public/js/Physijs/ammo.js"
 end
 
