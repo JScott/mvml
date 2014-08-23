@@ -26,15 +26,15 @@ end
 
 get '/physijs_worker' do
   cross_origin
-  send_file "public/js/Physijs/worker.js"
+  send_file "#{settings.root}/public/js/Physijs/worker.js"
 end
 
 get '/ammo_worker' do
   cross_origin
-  send_file "public/js/Physijs/ammo.js"
+  send_file "#{settings.root}/public/js/Physijs/ammo.js"
 end
 
 get '/spec' do
   cross_origin    
-  send_file 'spec/data/spec.mvml', :type => 'text/mvml'
+  send_file "#{settings.root}/spec/data/spec.mvml", :type => 'text/mvml'
 end
