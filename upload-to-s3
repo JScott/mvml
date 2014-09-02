@@ -1,0 +1,2 @@
+#!/bin/bash
+aws s3 sync . s3://mvml-dev/ --acl public-read --exclude '.git/*' --exclude '.gitignore' --exclude 'upload-to-s3' --exclude 'old/*'
