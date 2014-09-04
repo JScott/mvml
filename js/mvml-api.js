@@ -1,12 +1,14 @@
 var MVML = {
-  load_string: function(string) {
-    var html = this.to_html(string)
-    document.open();
-    document.write(html);
-    document.close();
-    log.trace('nothing');
-  },
+  content_server: 'https://s3.amazonaws.com/mvml-dev',
 
+  load_string: function(string) {
+    var html = this.to_html(string, function(html) {
+      document.open();
+      document.write(html+'</scri'+'pt></body></html>');
+      document.close();
+    });
+  },
+  
   load_file: function(url) {
     var that = this;
     var get = new XMLHttpRequest();
@@ -17,15 +19,21 @@ var MVML = {
       }
     }
     get.send();
-    log.trace('nothing');
   },
   
-  to_html: function(mvml) {
+  to_html: function(mvml, callback) {
     var view = this.generate_view(mvml);
-    // template = load template file
-    // return Mustache.render(template, view)
-    log.trace(view);
-    return view;
+    var get = new XMLHttpRequest();
+    get.open("GET", this.content_server+'/js/templates/main.html', true);
+    get.onreadystatechange = function() {
+      if(get.readyState == 4 && get.status == 200) {
+        var template = get.responseText;
+        var html = Mustache.render(template, view);
+        //log.trace(html);
+        callback(html);
+      }
+    }
+    get.send();
   },
   
   defaults: {
@@ -42,7 +50,7 @@ var MVML = {
     },
     
     model: {
-      color: "0xffffff",
+      color: 0xffffff,
       scale: "(1,1,1)",
       position: "(0,0,0)",
       rotation: "(0,0,0)",
@@ -65,29 +73,29 @@ var MVML = {
   
   base_view: function(mvml) {
     return {
+      content_server: this.content_server,
       title: mvml.title || this.defaults.title,
       motd: mvml.motd || this.defaults.motd
     };
   },
   
   player_view: function(mvml) {
-    var player_options = _.extend(this.defaults.player, mvml.player);
+    var player_options = _.extend({}, this.defaults.player, mvml.player);
     return { player: player_options };
   },
   
-  scene_types: [
-    { name: 'primitive', plural: 'primitives' },
-    { name: 'mesh', plural: 'meshes' },
-    { name: 'light', plural: 'lights' },
-    { name: 'audio', plural: 'audio' }
-  ],
-  
   scene_view: function(mvml) {
     var that = this;
-    var template = {}
-    _.each(this.scene_types, function(type) {
-      template[type.plural] = that.new_scene_objects(type.name, mvml.scene)
-    });
+    var template = {
+      models: _.union(this.new_scene_objects('primitive', mvml.scene),
+                      this.new_scene_objects('mesh', mvml.scene)),
+      lights: this.new_scene_objects('light', mvml.scene),
+      audio: this.new_scene_objects('audio', mvml.scene)
+    }
+    template.scene_count = template.models.length +
+                           template.lights.length +
+                           template.audio.length + 1;
+    //log.trace(template);
     return template;
   },
   
@@ -96,36 +104,44 @@ var MVML = {
     var objects = _.select(scene, function(object) {
       return object[type] !== undefined;
     });
-    return _.collect(objects, function(object) {
+    objects = _.collect(objects, function(object) {
       return that['new_'+type](object);
     });
+    //log.trace(objects);
+    return objects;
   },
   
-  primitive_js_methods: {
+  js_methods: {
     sphere: {
-      render: 'SphereGeometry(1)',
+      geometry: 'SphereGeometry(1)',
       bounding: 'SphereMesh'
     },
     box: {
-      render: 'BoxGeometry(1,1,1)',
+      geometry: 'BoxGeometry(1,1,1)',
       bounding: 'BoxMesh'
     },
     plane: {
-      render: 'PlaneGeometry(1,1)',
+      geometry: 'PlaneGeometry(1,1)',
       bounding: 'BoxMesh' // PlaneMesh is infinite
+    },
+    mesh: {
+      bounding: 'BoxMesh' // TODO: option of ConcaveMesh or ConvexMesh
     }
   },
   
   new_primitive: function(object) {
     return _.extend({
-      render_call: this.primitive_js_methods[object.primitive].render,
-      bounding: this.primitive_js_methods[object.primitive].bounding
+      geometry: this.js_methods[object.primitive].geometry,
+      bounding: this.js_methods[object.primitive].bounding,
+      mesh: false
     }, this.new_model(object));
   },
   
   new_mesh: function(object) {
     return _.extend({
-      path: object.mesh
+      geometry: object.mesh,
+      bounding: this.js_methods.mesh.bounding,
+      mesh: true
     }, this.new_model(object));
   },
   
@@ -136,7 +152,10 @@ var MVML = {
     if (typeof object.color === "string") {
       object.color = "\'"+object.color+"\'"
     }
-    return _.extend(this.defaults.model, object);
+    if (object.physics === "off") {
+      object.physics = false;
+    }
+    return _.extend({}, this.defaults.model, object);
   },
   
   convert_rotation: function(rotation) {
