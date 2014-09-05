@@ -1,6 +1,17 @@
 var MVML = {
   content_server: 'https://s3.amazonaws.com/mvml-dev',
 
+  ajax_get: function(url, callback) {
+    var get = new XMLHttpRequest();
+    get.open("GET", url, true);
+    get.onreadystatechange = function() {
+      if(get.readyState == 4 && get.status == 200) {
+        callback(get.responseText);
+      }
+    }
+    get.send();
+  },
+
   load_string: function(string) {
     var html = this.to_html(string, function(html) {
       document.open();
@@ -11,29 +22,18 @@ var MVML = {
   
   load_file: function(url) {
     var that = this;
-    var get = new XMLHttpRequest();
-    get.open("GET", url, true);
-    get.onreadystatechange = function() {
-      if(get.readyState == 4 && get.status == 200) {
-        that.load_string(get.responseText);
-      }
-    }
-    get.send();
+    this.ajax_get(url, function(contents) {
+      that.load_string(contents);
+    });
   },
   
   to_html: function(mvml, callback) {
     var view = this.generate_view(mvml);
-    var get = new XMLHttpRequest();
-    get.open("GET", this.content_server+'/js/templates/main.html', true);
-    get.onreadystatechange = function() {
-      if(get.readyState == 4 && get.status == 200) {
-        var template = get.responseText;
-        var html = Mustache.render(template, view);
-        //log.trace(html);
-        callback(html);
-      }
-    }
-    get.send();
+    this.ajax_get(this.content_server+'/js/templates/main.html', function(template) {
+      var html = Mustache.render(template, view);
+      //log.trace(html);
+      callback(html);    
+    });
   },
   
   defaults: {
