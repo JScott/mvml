@@ -1,13 +1,19 @@
 beforeEach(function () {
   jasmine.addMatchers({
-    toBePlaying: function () {
+    toBeHTMLGL: function () {
       return {
-        compare: function (actual, expected) {
-          var player = actual;
+        compare: function (actual) {
+          var isHTML = actual.match(/<html.*>/) !== null;
+          var isWebGL = actual.match(/three.*js/) !== null;
 
-          return {
-            pass: player.currentlyPlayingSong === expected && player.isPlaying
+          var result = { pass: isHTML && isWebGL };
+          if (result.pass) {
+            result.message = "Expected given string to NOT be HTML/WebGL";
           }
+          else {
+            result.message = "Expected given string to be HTML/WebGL";
+          }
+          return result;
         }
       };
     }

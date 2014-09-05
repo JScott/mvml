@@ -5,7 +5,7 @@ var scripts = [
   '//cdnjs.cloudflare.com/ajax/libs/loglevel/1.1.0/loglevel.min.js',
   'js/mvml-api.js'
 ];
-if (typeof jasmine === "undefined") {
+if (typeof mocha === "undefined") {
   scripts.push('js/mvml-replace.js');
 }
 var head = document.getElementsByTagName('head')[0];
