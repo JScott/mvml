@@ -1,14 +1,14 @@
 describe('MVML', function() {
-  describe('.to_html', function() {
-    var specs;
-    before(function() {
-      specs = {
-        empty: '',
-        bad: "---\nalist:\n   -what?\n  not good.",
-        good: "---\ntitle: test\nscene:\n- primitive: sphere"
-      };
-    });
+  var specs;
+  before(function() {
+    specs = {
+      empty: '',
+      bad: "---\nalist:\n   -what?\n  not good.",
+      good: "---\ntitle: test\nscene:\n- primitive: sphere"
+    };
+  });
 
+  describe('.to_html', function() {
     describe('with valid MVML', function() {
       it("generates WebGL/three.js HTML", function(done) {
         MVML.to_html(specs.good, function(html) {
@@ -45,5 +45,59 @@ describe('MVML', function() {
       });
     });
 
+  });
+  
+  describe('.generate_view', function() {
+    var for_mvml;
+    before(function() {
+      for_mvml = [
+        'content_server',
+        'title',
+        'motd',
+        'player',
+        'models',
+        'lights',
+        'audio'
+      ];
+    });
+    
+    describe('with valid MVML', function() {
+      it("generates an Object", function() {
+        var view = MVML.generate_view(specs.good);
+        expect(view).to.be.an('object');
+      });
+      it("generates the components for an MVML scene", function() {
+        var view = MVML.generate_view(specs.good);
+        expect(view).to.have.keys(for_mvml);
+      });
+    });
+
+    describe('with an empty string', function() {
+      it("generates an Object", function() {
+        var view = MVML.generate_view(specs.empty);
+        expect(view).to.be.an('object');
+      });
+      it("generates the components for an MVML scene", function() {
+        var view = MVML.generate_view(specs.empty);
+        expect(view).to.have.keys(for_mvml);
+      });
+    });
+    
+    describe('with badly-formatted MVML', function() {
+      it("throws a YAML parsing exception", function() {
+        expect(function() { MVML.generate_view(specs.bad); }).to.throwException(function(e) { 
+          var exception_type = e.name;
+          expect(exception_type).to.equal('YAMLException');
+        });
+      });
+    });
+
+  });
+  
+  describe('.convert_rotation', function() {
+    it('converts degrees in a "(x,y,z)" rotation vector to radians', function() {
+      var result = MVML.convert_rotation('(0, 180,-90)');
+      expect(result).to.match(/^\(0,3.141592.*,-1.570796.*\)$/);
+    });
   });
 });
