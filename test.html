@@ -12,9 +12,12 @@
         if (!expr) throw new Error(msg || 'failed');
       }
     </script>
-    <script src="js/mvml.js"></script>
+    <script src="js/mvml-dependencies.js"></script>
+    <script src="js/mvml-api.js"></script>
     <script src="js/mocha/mvml_spec.js"></script>
     <script>
+      MVML.hosted_url = 'https://s3.amazonaws.com/mvml-dev';
+      
       onload = function(){
         var runner = mocha.run();
         // runner.globals(['foo', 'bar', 'baz']);

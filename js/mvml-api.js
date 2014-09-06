@@ -1,5 +1,5 @@
 var MVML = {
-  content_server: 'https://s3.amazonaws.com/mvml-dev',
+  hosted_url: 'https://s3.amazonaws.com/mvml-dev',
 
   ajax_get: function(url, callback) {
     var get = new XMLHttpRequest();
@@ -29,7 +29,7 @@ var MVML = {
   
   to_html: function(mvml, callback) {
     var view = this.generate_view(mvml);
-    this.ajax_get(this.content_server+'/js/templates/main.html', function(template) {
+    this.ajax_get(this.hosted_url+'/js/templates/main.html', function(template) {
       var html = Mustache.render(template, view);
       callback(html);    
     });
@@ -72,7 +72,7 @@ var MVML = {
   
   base_view: function(mvml) {
     return {
-      content_server: this.content_server,
+      hosted_url: this.hosted_url,
       title: (mvml && mvml.title) || this.defaults.title,
       motd: (mvml && mvml.motd) || this.defaults.motd
     };

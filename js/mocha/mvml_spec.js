@@ -51,7 +51,7 @@ describe('MVML', function() {
     var for_mvml;
     before(function() {
       for_mvml = [
-        'content_server',
+        'hosted_url',
         'title',
         'motd',
         'player',
