@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="js/mvml.js"></script>
+  </head>
+  <mvml>
+---
+title: Hello metaverse!
+player:
+  move_speed: 15
+  turn_speed: 1.5
+  min_jump_speed: 0
+  max_jump_speed: 20
+  start: (0,0,30)
+  gravity: 30
+scene:
+- primitive: sphere
+
+- primitive: box
+  position: (0, 0, -20)
+  scale: (30,10,1)
+  color: 0x00ff00
+
+- primitive: box
+  position: (-10, 1, 0)
+  scale: (2,2,4)
+  rotation: (0,-30,0)
+  color: 0x00ffff
+  physics: off
+
+- primitive: plane
+  position: (0,-2, 0)
+  scale: (200,200,1)
+  rotation: (-90,0,0)
+  texture: images/grass.jpg
+
+- mesh: models/invader.obj.js
+  position: (10,0,0)
+  scale: (0.05, 0.05, 0.05)
+  color: red
+  mass: 200
+  </mvml>
+</html>
