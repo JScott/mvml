@@ -73,23 +73,23 @@ var MVML = {
   base_view: function(mvml) {
     return {
       content_server: this.content_server,
-      title: mvml.title || this.defaults.title,
-      motd: mvml.motd || this.defaults.motd
+      title: (mvml && mvml.title) || this.defaults.title,
+      motd: (mvml && mvml.motd) || this.defaults.motd
     };
   },
   
   player_view: function(mvml) {
-    var player_options = _.extend({}, this.defaults.player, mvml.player);
+    var player_options = _.extend({}, this.defaults.player, (mvml && mvml.player));
     return { player: player_options };
   },
   
   scene_view: function(mvml) {
-    var that = this;
+    var scene = mvml && mvml.scene;
     var template = {
-      models: _.union(this.new_scene_objects('primitive', mvml.scene),
-                      this.new_scene_objects('mesh', mvml.scene)),
-      lights: this.new_scene_objects('light', mvml.scene),
-      audio: this.new_scene_objects('audio', mvml.scene)
+      models: _.union(this.new_scene_objects('primitive', scene),
+                      this.new_scene_objects('mesh', scene)),
+      lights: this.new_scene_objects('light', scene),
+      audio: this.new_scene_objects('audio', scene)
     }
     template.scene_count = template.models.length +
                            template.lights.length +
