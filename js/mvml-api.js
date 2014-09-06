@@ -28,10 +28,10 @@ var MVML = {
   },
   
   to_html: function(mvml, callback) {
+    log.debug(this);
     var view = this.generate_view(mvml);
     this.ajax_get(this.content_server+'/js/templates/main.html', function(template) {
       var html = Mustache.render(template, view);
-      //log.trace(html);
       callback(html);    
     });
   },
@@ -67,7 +67,7 @@ var MVML = {
       this.player_view(mvml_object),
       this.scene_view(mvml_object)
     );
-    log.trace(template);
+    //log.trace(template);
     return template;
   },
   
