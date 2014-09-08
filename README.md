@@ -8,4 +8,14 @@ WebGL finally lets us share 3D worlds with each other but it's still restricted 
 
 # Getting started
 
-Download this repository and copy the files in `lib` to your own site. Then just use `spec.html` as a template on how to use the library. Happy building!
+Download the zip from the `dist` folder and add the scripts to your site.
+
+To use the API, follow the example of `spec.html`. Happy building!
+
+# Building it yourself
+
+`npm install`
+
+`gulp zip`
+
+Then just use the new distribution in `dist`.
