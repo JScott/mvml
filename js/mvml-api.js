@@ -1,6 +1,11 @@
 var MVML = {
-  hosted_url: 'https://s3.amazonaws.com/mvml-dev',
-
+  init: function() {
+    var scripts = document.getElementsByTagName('script');
+    var scripts_path = scripts[scripts.length-1].src.split('/');
+    scripts_path.pop();
+    this.scripts_path = scripts_path.join('/');
+  },
+  
   ajax_get: function(url, callback) {
     var get = new XMLHttpRequest();
     get.open("GET", url, true);
@@ -10,6 +15,12 @@ var MVML = {
       }
     }
     get.send();
+  },
+
+  load_tag: function() {
+    var mvml = document.getElementsByTagName('mvml')[0];
+    // TODO: grab from src if available
+    MVML.load_string(mvml.innerHTML);
   },
 
   load_string: function(string) {
@@ -29,7 +40,7 @@ var MVML = {
   
   to_html: function(mvml, callback) {
     var view = this.generate_view(mvml);
-    this.ajax_get(this.hosted_url+'/js/templates/main.html', function(template) {
+    this.ajax_get(this.scripts_path+'/templates/main.html', function(template) {
       var html = Mustache.render(template, view);
       callback(html);    
     });
@@ -72,7 +83,7 @@ var MVML = {
   
   base_view: function(mvml) {
     return {
-      hosted_url: this.hosted_url,
+      scripts_path: this.scripts_path,
       title: (mvml && mvml.title) || this.defaults.title,
       motd: (mvml && mvml.motd) || this.defaults.motd
     };

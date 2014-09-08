@@ -1,18 +1,19 @@
+MVML.html_template = "
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <title>{{ title }}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{{&scripts_path}}/../css/three.css">
+    <link rel="stylesheet" type="text/css" href="{{&hosted_url}}/css/three.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/three.js/r67/three.min.js"></script>
-    <script src="{{&scripts_path}}/physijs/physi.js"></script>
-    <script src="{{&scripts_path}}/three/helpers/Detector.js"></script>
-    <script src="{{&scripts_path}}/three/helpers/KeyboardState.js"></script>
-    <script src="{{&scripts_path}}/three/CharacterController.js"></script>
-    <script src="{{&scripts_path}}/three/InputEvents.js"></script>
-    <script src="{{&scripts_path}}/three/CollisionCommander.js"></script>
-    <script src="{{&scripts_path}}/three/FetchBlob.js"></script>
+    <script src="{{&hosted_url}}/js/physijs/physi.js"></script>
+    <script src="{{&hosted_url}}/js/three/helpers/Detector.js"></script>
+    <script src="{{&hosted_url}}/js/three/helpers/KeyboardState.js"></script>
+    <script src="{{&hosted_url}}/js/three/CharacterController.js"></script>
+    <script src="{{&hosted_url}}/js/three/InputEvents.js"></script>
+    <script src="{{&hosted_url}}/js/three/CollisionCommander.js"></script>
+    <script src="{{&hosted_url}}/js/three/FetchBlob.js"></script>
   </head>
 
   <body>
@@ -23,8 +24,8 @@
     </div>-->
 
     <script>
-      var worker_blob = get_blob('{{&scripts_path}}/physijs/worker.js');
-      var ammo_blob = get_blob('{{&scripts_path}}/physijs/ammo.js');
+      var worker_blob = get_blob('{{&hosted_url}}/js/physijs/worker.js');
+      var ammo_blob = get_blob('{{&hosted_url}}/js/physijs/ammo.js');
       Physijs.scripts.worker = URL.createObjectURL(worker_blob);
       Physijs.scripts.ammo = URL.createObjectURL(ammo_blob);
 
@@ -189,3 +190,4 @@
         //case 81: controls.moveState.rollLeft = 1; break; //Q
         //case 69: controls.moveState.rollRight = 1; break; //E
       }*/
+";
