@@ -5,12 +5,23 @@ var gulp = require('gulp');
 var zip = require('gulp-zip');
 var shell = require('gulp-shell');
 
-var dist_files = ['js/**/*', 'css/**/*', '*.html'];
-/* nano highlighting fix */
+var dist_files = ['www/**/*', 'js/**/*', 'css/**/*', '*.html'];
 
 gulp.task('default', ['build']);
 
-gulp.task('build', ['zip', 'aws']);
+gulp.task('build', ['aws']);
+
+gulp.task('aws', ['zip'], shell.task('./upload-to-s3'));
+
+gulp.task('zip', function() {
+  return gulp.src(['js/**/*','css/**/*'], {base: '.'})
+    .pipe(zip('mvml-dist.zip'))
+    .pipe(gulp.dest('dist'));
+});
+
+/*gulp.task('watch', function () {
+  gulp.watch(dist_files, ['aws']);
+});*/
 
 /*gulp.task('compile', function() {
   return gulp.src(dist_files)
@@ -21,14 +32,3 @@ gulp.task('build', ['zip', 'aws']);
     .pipe(gulp.dest('js/mvml.js'));
 });*/
 
-gulp.task('zip', function() {
-  return gulp.src(['js/**/*','css/**/*'], {base: '.'})
-    .pipe(zip('mvml-dist.zip'))
-    .pipe(gulp.dest('dist'));
-});
-
-gulp.task('aws', shell.task('./upload-to-s3'));
-
-gulp.task('watch', function () {
-  gulp.watch(dist_files, ['aws']);
-});

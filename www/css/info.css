@@ -1,0 +1,56 @@
+div.showcase {
+  margin: 0 20px;
+}
+
+div.showcase,
+div.read-play {
+  padding-bottom: 20px;
+}
+div.showcase div {
+  width: 50%;
+  height: 300px;
+  padding: 0;
+}
+
+form.subscribe,
+a.self-host {
+  margin: 20px 0 0 0;
+}
+
+.showcase iframe,
+form.subscribe .form-group,
+form.subscribe .input-group {
+  width: 100%;
+  height: 100%;
+}
+
+.subscribe a.btn {
+  width: 100%;
+}
+
+.lead .popover-content {
+  font-size: 14px;
+}
+
+.jumbotron {
+  margin-bottom: 0;
+}
+section {
+  padding: 30px 0;
+}
+section.shaded {
+  background: #eee;
+}
+
+div.showcase div.iframe-overlay {
+  position:relative;
+  bottom:305px;
+  right:0;
+  margin:3%;
+  width:93%;
+  height:94%;
+  /*background:rgba(255,255,255,0.8); or just this*/
+  z-index:50;
+  pointer-events:none;
+  color:#fff;
+}
