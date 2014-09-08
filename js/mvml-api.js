@@ -19,8 +19,13 @@ var MVML = {
 
   load_tag: function() {
     var mvml = document.getElementsByTagName('mvml')[0];
-    // TODO: grab from src if available
-    MVML.load_string(mvml.innerHTML);
+    var src = mvml.getAttribute('src');
+    if (src) {
+      MVML.load_file(src);
+    }
+    else {
+      MVML.load_string(mvml.innerHTML);
+    }
   },
 
   load_string: function(string) {
@@ -38,6 +43,8 @@ var MVML = {
     });
   },
   
+
+
   to_html: function(mvml, callback) {
     var view = this.generate_view(mvml);
     this.ajax_get(this.scripts_path+'/templates/main.html', function(template) {
