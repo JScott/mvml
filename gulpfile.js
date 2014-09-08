@@ -8,7 +8,9 @@ var shell = require('gulp-shell');
 var dist_files = ['js/**/*', 'css/**/*', '*.html'];
 /* nano highlighting fix */
 
-gulp.task('default', ['zip', 'aws']);
+gulp.task('default', ['build']);
+
+gulp.task('build', ['zip', 'aws']);
 
 /*gulp.task('compile', function() {
   return gulp.src(dist_files)
@@ -28,5 +30,5 @@ gulp.task('zip', function() {
 gulp.task('aws', shell.task('./upload-to-s3'));
 
 gulp.task('watch', function () {
-  gulp.watch(dist_files, ['zip', 'aws']);
+  gulp.watch(dist_files, ['aws']);
 });
