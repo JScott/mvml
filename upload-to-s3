@@ -1,2 +1,3 @@
 #!/bin/bash
-aws s3 sync . s3://mvml-dev/ --acl public-read --exclude '.git/*' --exclude '.gitignore' --exclude 'upload-to-s3' --exclude 'old/*' --exclude 'node_modules/*' --exclude 'gulpfile.js' --exclude 'package.json'
+aws s3 sync . s3://mvml-dev/ --exclude '*' --include '*.html' --exclude 'node_modules/*' --include 'js/*' --include 'css/*' --include 'img/*' --include 'dist/*' --include 'www/*' --acl public-read
+#aws s3 sync . s3://mvml-dev/ --acl public-read --exclude '.git/*' --exclude '.gitignore' --exclude 'upload-to-s3' --exclude 'node_modules/*' --exclude 'gulpfile.js' --exclude 'package.json'
