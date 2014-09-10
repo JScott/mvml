@@ -5,7 +5,7 @@ var gulp = require('gulp');
 var zip = require('gulp-zip');
 var shell = require('gulp-shell');
 
-var dist_files = ['img/mvml/**/*', 'js/mvml/**/*', 'css/mvml.css'];
+var dist_files = ['img/pan-icon.png', 'js/mvml/**/*', 'css/mvml.css'];
 
 gulp.task('default', ['build']);
 
