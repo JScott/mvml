@@ -44,77 +44,54 @@
         </div>
       </div>
     </div>
-    <section class="usage">
-      <div class="container">
-        <h1 class="page-header">Usage</h1>
-        <p class="lead">
-          MVML isn't natively supported by browsers so it needs to be parsed into HTML and JavaScript
-          Our API makes that an easy step for you.
-        </p>
-      <div class="row">
-        <div class="col-md-6">
-        <h2>Quick</h2>
-        <p>
-          The quickest way to utilize this is to make an API request from an HTML page.
-          We've built a helper script that can handle that for you:
-        </p>
-        <pre><code class="html">&lt;script src="<a href="http://content.dev.mvml.net:6865/js/mvml-api.js">http://content.dev.mvml.net:6865/js/mvml-api.js</a>">&lt;/script>
-&lt;script>
-  window.onload = function() {
-    MVML.load_string(document.getElementsByTagName("mvml")[0].innerHTML);
-  }
-&lt;/script>
-&lt;mvml>
----
-title: JavaScript test
-player:
-  start: (0, 0, 20)
-  gravity: 0
-scene:
-- primitive: sphere
-  position: (0, 4, 0)
-&lt;/mvml></code></pre>
-        <p>
-          That's it! Just upload that to your website. You can also load it directly from a hosted MVML file:
-        </p>
-        <pre><code class="html">&lt;script src="<a href="http://content.dev.mvml.net:6865/js/mvml-api.js">http://content.dev.mvml.net:6865/js/mvml-api.js</a>">&lt;/script>
-&lt;script>
-  MVML.load_file("<a href="http://dev.mvml.net/mvml/spec.mvml">http://dev.mvml.net/mvml/spec.mvml</a>");
-&lt;/script></code></pre>
-        </div>
-        <div class="col-md-6">
-        <h2>Advanced</h2>
-        <p>
-          If you have access to server-side code you can also make a call from there.
-          <a href="https://gist.github.com/JScott/e396897ffb61d62e7b99">These examples</a>
-          show how I do it for this very page in NodeJS.
-          It should be pretty similar across frameworks.
-        </p>
-        <p>
-          Privacy issues? You can also host the MVML parsing server yourself.
-          Check out the <a href="https://github.com/JScott/mvml">Github</a> page for more details.
-        </p>
-        </div>
-      </div>
-      </div>
-    </section>
-    <section class="syntax">
-      <div class="container">
-        <h1 class="page-header">Syntax</h1>
-        <p class="lead">
-          Just like HTML, MVML is built out of a syntax of tags.
-          In order to build worlds, you'll need to understand these.
-        </p>
-      <div class="row">
-        <div class="col-md-6 col-sm-6">
-          <h2>YAML</h2>
-          <p>
-            Just like HTML is essentially <a href="http://www.w3.org/XML/">XML</a>,
-            MVML is essentially <a href="http://www.yaml.org/">YAML</a>.
-            This is important because unlike XML, YAML is very strict on indentation.
-            Even missing a space could cause an error which forces us to write legibly.
+
+      <section class="usage">
+        <div class="container">          
+          <h1 class="page-header">Usage</h1>
+          <p class="lead">
+            MVML isn't natively supported by browsers yet. Our API converts it into HTML and JavaScript for you.
           </p>
-          <pre><code class="yaml"># Valid:
+        <div class="row">
+          <div class="col-md-6 col-sm-6">
+            <h2>Download</h2>
+            <p>
+              To use the API, just download and unpack it into the root of your application.
+            </p>
+            <a class="btn btn-primary btn-lg" href="dist/mvml-dist.zip">Download</a>
+          </div>
+          <div class="col-md-6 col-sm-6">
+            <h2>Start</h2>
+            <p>
+            To use the API, just add an <code class="html">&lt;mvml></code> tag and include these scripts:
+            <pre><code class="html">&lt;script src="js/mvml/dependencies.js">&lt;/script>
+&lt;script src="js/mvml/api.js">&lt;/script>
+&lt;script src="js/mvml/load.js">&lt;/script></code></pre>
+            If there's a <code class="html">src</code> attribute in the tag, it'll load the MVML from an external file.
+            Otherwise it'll take the MVML from the inner text.
+            Remember that MVML is sensitive to indentation and best-practice HTML formatting interferes with that
+            See the source of <a href="example.html">this page</a> for an example.
+            </p>
+          </div>
+        </div>
+        </div>
+      </section>
+      <section class="syntax">
+        <div class="container">
+          <h1 class="page-header">Syntax</h1>
+          <p class="lead">
+            Just like HTML, MVML is built out of a syntax of tags.
+            In order to build worlds, you'll need to understand these.
+          </p>
+        <div class="row">
+          <div class="col-md-6 col-sm-6">
+            <h2>YAML</h2>
+            <p>
+              Just like HTML is essentially <a href="http://www.w3.org/XML/">XML</a>,
+              MVML is essentially <a href="http://www.yaml.org/">YAML</a>.
+              This is important because unlike XML, YAML is very strict on indentation.
+              Even missing a space could cause an error which forces us to write legibly.
+            </p>
+            <pre><code class="yaml"># Valid:
 title: Hello metaverse!
 scene:
 - primative: sphere
@@ -128,25 +105,27 @@ scene:
 sphere
 - primative: box
 color: red</code></pre>
+          </div>
+          <div class="col-md-6 col-sm-6">
+            <h2>Components</h2>
+            <p>
+              You create worlds in MVML by stringing together components such as the
+              <code>scene</code> tag or <code>player</code> tag. Knowing how to use these
+              is important.
+            </p>
+            <p>
+              Unfortunately I don't have full documentation of this yet. Until I do,
+              please read <a href="spec.mvml">spec.mvml</a>
+              which uses each component and its properties at least once. You can see it
+              rendered <a href="spec.html">here</a>.
+            </p>
+          </div>
         </div>
-        <div class="col-md-6 col-sm-6">
-          <h2>Components</h2>
-          <p>
-            You create worlds in MVML by stringing together components such as the
-            <code>scene</code> tag or <code>player</code> tag. Knowing how to use these
-            is important.
-          </p>
-          <p>
-            Unfortunately I don't have full documentation of this yet. Until I do,
-            please read <a href="http://dev.mvml.net/mvml/spec.mvml">spec.mvml</a>
-            which uses each component and its properties at least once. You can see it
-            rendered <a href="http://dev.mvml.net/mvml/spec">here</a>.
-          </p>
-        </div>
-      </div>
       </div>
     </section>
-      <hr>
+    
+    <hr>
+    
     <footer>
       <div class="container">
         <p>&copy; Justin Scott 2014</p>
