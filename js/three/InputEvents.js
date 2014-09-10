@@ -1,14 +1,17 @@
+
 THREE.InputEvents = function ( controller ) {
   this.mouseDragging = false;
   this.panStart = new THREE.Vector2(0,0);
   this.domElement = document;
+  this.pan_icon = null;//document.getElementsById('pan-icon')[0];
+log.debug(this.pan_icon);
 
   this.handleEvent = function ( event ) {
     if ( typeof this[ event.type ] == 'function' ) {
       this[ event.type ]( event );
     }
   };
-
+  
   this.keydown = function( event ) {
     if ( event.altKey ) {
       return;
@@ -83,6 +86,8 @@ THREE.InputEvents = function ( controller ) {
 
     this.panStart.x = x;
     this.panStart.y = y;
+    
+   log.debug(this.pan_icon);    
   };
 
   this.touchmove = function( event ) {
