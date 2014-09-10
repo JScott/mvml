@@ -5,7 +5,7 @@ var gulp = require('gulp');
 var zip = require('gulp-zip');
 var shell = require('gulp-shell');
 
-var dist_files = ['www/**/*', 'js/**/*', 'css/**/*', '*.html'];
+var dist_files = ['img/mvml/**/*', 'js/mvml/**/*', 'css/mvml.css'];
 
 gulp.task('default', ['build']);
 
@@ -14,7 +14,7 @@ gulp.task('build', ['aws']);
 gulp.task('aws', ['zip'], shell.task('./upload-to-s3'));
 
 gulp.task('zip', function() {
-  return gulp.src(['js/**/*','css/**/*'], {base: '.'})
+  return gulp.src(dist_files, {base: '.'})
     .pipe(zip('mvml-dist.zip'))
     .pipe(gulp.dest('dist'));
 });
