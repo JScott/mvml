@@ -1,3 +1,21 @@
 #!/bin/bash
-aws s3 sync . s3://dev.mvml.net/ --exclude '*' --include '*.html' --exclude 'node_modules/*' --include 'js/*' --include 'css/*' --include 'img/*' --include 'dist/*' --include 'www/*' --acl public-read --delete
-#aws s3 sync . s3://mvml-dev/ --acl public-read --exclude '.git/*' --exclude '.gitignore' --exclude 'upload-to-s3' --exclude 'node_modules/*' --exclude 'gulpfile.js' --exclude 'package.json'
+COMMAND="aws s3 sync . s3://dev.mvml.net/"
+FILE_ARGS=(
+  "exclude '*'"
+  "include '*.html'"
+  "include '*.mvml'"
+  "exclude 'node_modules/*'"
+  "include 'js/*'"
+  "include 'css/*'"
+  "include 'img/*'"
+  "include 'dist/*'"
+  "include 'models/*'"
+);
+for arg in "${FILE_ARGS[@]}"
+do
+  COMMAND="${COMMAND} --${arg}"
+done
+COMMAND="${COMMAND} --acl public-read --delete"
+
+echo ${COMMAND}
+eval ${COMMAND}
