@@ -1,5 +1,11 @@
 #!/bin/bash
-COMMAND="aws s3 sync . s3://dev.mvml.net/"
+BUCKET='s3://dev.mvml.net/'
+if [ -n "$1" ] && [ $1 == 'production' ]
+then
+  BUCKET='s3://www.mvml.net/'
+fi
+
+COMMAND="aws s3 sync . ${BUCKET}"
 FILE_ARGS=(
   "exclude '*'"
   "include '*.html'"

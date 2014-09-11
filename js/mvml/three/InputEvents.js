@@ -4,7 +4,6 @@ THREE.InputEvents = function ( controller ) {
   this.panStart = new THREE.Vector2(0,0);
   this.domElement = document;
   this.pan_icon = null;//document.getElementsById('pan-icon')[0];
-log.debug(this.pan_icon);
 
   this.handleEvent = function ( event ) {
     if ( typeof this[ event.type ] == 'function' ) {
