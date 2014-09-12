@@ -21,3 +21,16 @@ body {
 a { color: #0080ff; }
 
 b { color:orange }
+
+#pan-icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  pointer-events: none;
+}
+
+#pan-icon img {
+  height: 40px;
+  width: 40px;
+}

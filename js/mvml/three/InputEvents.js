@@ -1,9 +1,9 @@
 
-THREE.InputEvents = function ( controller ) {
+THREE.InputEvents = function ( controller, dom_hud ) {
   this.mouseDragging = false;
   this.panStart = new THREE.Vector2(0,0);
   this.domElement = document;
-  this.pan_icon = null;//document.getElementsById('pan-icon')[0];
+  this.pan_icon = dom_hud.pan_icon;
 
   this.handleEvent = function ( event ) {
     if ( typeof this[ event.type ] == 'function' ) {
@@ -63,8 +63,20 @@ THREE.InputEvents = function ( controller ) {
 
   this.touchstart = function( event ) {
     //document.getElementById('info').innerHTML = event.targetTouches.length;
-    var touch = event.targetTouches[0];
-    this.pan_start(event, touch);
+    var touches = event.targetTouches.length;
+    if ( touches == 1 ) {
+      var touch = event.targetTouches[0];
+      this.pan_start(event, touch);
+    }
+    else if ( touches == 2 ) {
+      this.rotate_stop();
+      this.move_forward();
+      this.hide_icon();
+    }
+    else if ( touches >= 2 ) {
+      this.rotate_stop();
+      this.move_back();
+    }
   };
 
   this.mousedown = function( event ) {
@@ -73,8 +85,9 @@ THREE.InputEvents = function ( controller ) {
   };
 
   this.pan_start = function( event, touch ) {
-    //event.preventDefault();
+    event.preventDefault();
     //event.stopPropagation();
+
     var touch_passed = arguments.length > 1
     var x = touch_passed ? touch.pageX : event.pageX;
     var y = touch_passed ? touch.pageY : event.pageY;
@@ -85,8 +98,7 @@ THREE.InputEvents = function ( controller ) {
 
     this.panStart.x = x;
     this.panStart.y = y;
-    
-   log.debug(this.pan_icon);    
+    this.show_icon(x, y);
   };
 
   this.touchmove = function( event ) {
@@ -99,6 +111,14 @@ THREE.InputEvents = function ( controller ) {
     this.pan_move(event.pageX, event.pageY, 0);
   };
 
+  this.hide_icon = function() {
+    this.pan_icon.style.display = 'none';
+  }
+  this.show_icon = function(x, y) {
+    this.pan_icon.style.display = 'block';
+    this.pan_icon.style.left = (x-20).toString()+'px';
+    this.pan_icon.style.top = (y-20).toString()+'px';
+  }
   this.move_back = function() {
     controller.moveState.back = 1;
     controller.moveState.forward = 0;
@@ -126,42 +146,33 @@ THREE.InputEvents = function ( controller ) {
   }
 
   this.pan_move = function(x, y, touches) {
-    if ( this.mouseDragging ) {
+    if ( this.mouseDragging || touches == 1 ) {
       var container = this.getContainerDimensions();
       var halfWidth  = container.size[ 0 ] / 2;
       var halfHeight = container.size[ 1 ] / 2;
 
       this.rotate_start(
-        -( ( x - container.offset[ 0 ] ) - halfWidth  ) / halfWidth,
-         ( ( y - container.offset[ 1 ] ) - halfHeight ) / halfHeight
+         (this.panStart.x - x) / halfWidth,
+        -(this.panStart.y - y) / halfHeight
       );
-    }
-    else if ( touches == 1 ) {
-      this.move_stop();
-
-      var container = this.getContainerDimensions();
-      var halfWidth  = container.size[ 0 ] / 2;
-      var halfHeight = container.size[ 1 ] / 2;
-
-      this.rotate_start(
-        -(this.panStart.x - x) / halfWidth,
-         (this.panStart.y - y) / halfHeight
-      );
-    }
-    else if ( touches == 2 ) {
-      this.rotate_stop();
-      this.move_forward();
-    }
-    else if ( touches >= 2 ) {
-      this.rotate_stop();
-      this.move_back();
     }
   };
 
   this.touchend = function( event ) {
     //document.getElementById('info').innerHTML = event.targetTouches.length;
-    var touch = event.targetTouches[0];
-    this.pan_end(event);
+    var touches = event.targetTouches.length;
+    if ( touches == 0 ) {
+      this.move_stop();
+      this.pan_end(event);
+    }
+    else if ( touches == 1 ) {
+      var touch = event.targetTouches[0];
+      this.pan_start(event, touch);      
+      this.move_stop();
+    }
+    else if ( touches == 2 ) {
+      this.move_forward();
+    }
   };
 
   this.mouseup = function( event ) {
@@ -172,6 +183,7 @@ THREE.InputEvents = function ( controller ) {
   this.pan_end = function( event ) {
     //event.preventDefault();
     //event.stopPropagation();
+    this.hide_icon();
     this.rotate_stop();
   };
 

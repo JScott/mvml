@@ -17,9 +17,9 @@
 
   <body>
 
-    <!--<div id='pan-icon'>
-      <img src='{{&scripts_path}}/../img/pan-icon.png'>
-    </div>-->
+    <div id='pan-icon'>
+      <img src='{{&scripts_path}}/../../img/pan-icon.png'>
+    </div>
     
     <!--<div id="info"><br/>{{ motd }}<br/><br/>
     Desktop: <b>WASD</b> move, <b>mouse|arrow</b> pan<br/>
@@ -149,7 +149,9 @@
         character.dragToLook = true;
         character.minJumpSpeed = {{ player.min_jump_speed }};
         character.maxJumpSpeed = {{ player.max_jump_speed }};
-        input = new THREE.InputEvents( character );
+        input = new THREE.InputEvents( character, {
+          pan_icon: document.getElementById('pan-icon')
+        });
 
         // EVENTS
         //THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });

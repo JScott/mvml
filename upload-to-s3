@@ -9,7 +9,6 @@ COMMAND="aws s3 sync . ${BUCKET}"
 FILE_ARGS=(
   "exclude '*'"
   "include '*.html'"
-  "include '*.mvml'"
   "exclude 'node_modules/*'"
   "include 'js/*'"
   "include 'css/*'"
@@ -22,6 +21,11 @@ do
   COMMAND="${COMMAND} --${arg}"
 done
 COMMAND="${COMMAND} --acl public-read --delete"
+
+echo ${COMMAND}
+eval ${COMMAND}
+
+COMMAND="aws s3 sync . ${BUCKET} --exclude '*' --include '*.mvml' --recursive --acl public-read --delete --content-type 'text/plain'"
 
 echo ${COMMAND}
 eval ${COMMAND}
