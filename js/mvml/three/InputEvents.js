@@ -22,16 +22,16 @@ THREE.InputEvents = function ( controller, dom_hud ) {
           controller.setJumping(true);
         }
         break;
-      //case 38: /*up*/
+      case 38: /*up*/
       case 87: /*W*/
         controller.moveState.forward = 1; break;
-      //case 40: /*down*/
+      case 40: /*down*/
       case 83: /*S*/
         controller.moveState.back = 1; break;
-      //case 37: /*left*/
+      case 37: /*left*/
       case 65: /*A*/
         controller.moveState.left = 1; break;
-      //case 39: /*right*/
+      case 39: /*right*/
       case 68: /*D*/
         controller.moveState.right = 1; break;
     }
@@ -44,16 +44,16 @@ THREE.InputEvents = function ( controller, dom_hud ) {
       case 32: /* space */
         controller.setJumping(false);
         break;
-      //case 38: /*up*/
+      case 38: /*up*/
       case 87: /*W*/
         controller.moveState.forward = 0; break;
-      //case 40: /*down*/
+      case 40: /*down*/
       case 83: /*S*/
         controller.moveState.back = 0; break;
-      //case 37: /*left*/
+      case 37: /*left*/
       case 65: /*A*/
         controller.moveState.left = 0; break;
-      //case 39: /*right*/
+      case 39: /*right*/
       case 68: /*D*/
         controller.moveState.right = 0; break;
     }
