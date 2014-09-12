@@ -83,9 +83,20 @@ THREE.InputEvents = function ( controller, dom_hud ) {
     this.mouseDragging = true;
     this.pan_start(event);
   };
+  
+  this.in_iframe = function() {
+    try {
+      return window.self !== window.top;
+    }
+    catch (e) {
+      return true;
+    }
+  }
 
   this.pan_start = function( event, touch ) {
-    event.preventDefault();
+    if ( !this.in_iframe() ) {
+      event.preventDefault();
+    }
     //event.stopPropagation();
 
     var touch_passed = arguments.length > 1
