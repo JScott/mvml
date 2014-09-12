@@ -31,6 +31,7 @@ b { color:orange }
 }
 
 #pan-icon img {
+  opacity: 0.66;
   height: 40px;
   width: 40px;
 }
