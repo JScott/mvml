@@ -49,7 +49,9 @@ var MVML = {
     var view = this.generate_view(mvml);
     this.ajax_get(this.scripts_path+'/templates/main.html', function(template) {
       var html = Mustache.render(template, view);
-      callback(html);    
+      log.debug(view);
+      log.debug(html);
+      callback(html);
     });
   },
   
@@ -74,9 +76,26 @@ var MVML = {
       texture: null,
       physics: true,
       mass: 0
+    },
+    
+    light: {
+      color: 0x404040,
+      intensity: 1.0,
+      distance: 10.0,
+      position: "(0,0,0)"
     }
   },
-  
+
+  convert_rotation: function(rotation) {
+    rotation = rotation.substring(1, rotation.length-1);
+    rotation = rotation.replace(/\s/g, '');
+    rotation = rotation.split(',');
+    rotation = _.map(rotation, function(degrees) {
+      return degrees * Math.PI / 180.0;      
+    });
+    return "("+rotation.join(',')+")";
+  },
+    
   generate_view: function(mvml) {
     var mvml_object = jsyaml.load(mvml);
     var template = _.extend(
@@ -143,6 +162,15 @@ var MVML = {
     },
     mesh: {
       bounding: 'BoxMesh' // TODO: option of ConcaveMesh or ConvexMesh
+    },
+    point: {
+      light: 'PointLight'
+    },
+    directional: {
+      light: 'DirectionalLight'
+    },
+    ambient: {
+      light: 'AmbientLight'
     }
   },
   
@@ -161,13 +189,17 @@ var MVML = {
       mesh: true
     }, this.new_model(object));
   },
+
+  stringify_color: function(color) {
+    return "\'"+color+"\'"
+  },
   
   new_model: function(object) {
     if (object.rotation !== undefined) {
       object.rotation = this.convert_rotation(object.rotation)
     }
-    if (typeof object.color === "string") {
-      object.color = "\'"+object.color+"\'"
+    if (typeof object.color === 'string') {
+      object.color = this.stringify_color(object.color);
     }
     if (object.physics === "off") {
       object.physics = false;
@@ -175,18 +207,13 @@ var MVML = {
     return _.extend({}, this.defaults.model, object);
   },
   
-  convert_rotation: function(rotation) {
-    rotation = rotation.substring(1, rotation.length-1);
-    rotation = rotation.replace(/\s/g, '');
-    rotation = rotation.split(',');
-    rotation = _.map(rotation, function(degrees) {
-      return degrees * Math.PI / 180.0;      
-    });
-    return "("+rotation.join(',')+")";
-  },
-  
   new_light: function(object) {
-    return {};
+    if (typeof object.color === 'string') {
+      object.color = this.stringify_color(object.color);
+    }
+    return _.extend({
+      light_type: this.js_methods[object.light].light
+    }, this.defaults.light, object);
   },
   
   new_audio: function(object) {

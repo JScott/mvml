@@ -33,3 +33,15 @@ scene:
   scale: (0.05, 0.05, 0.05)
   color: red
   mass: 200
+
+- light: point
+  position: (0, 2,0)
+  intensity: 2.0
+  distance: 40
+  color: blue
+
+- light: directional
+  position: (0,1,1)
+
+- light: ambient
+  color: 0x101010

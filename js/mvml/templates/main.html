@@ -67,13 +67,6 @@
         camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
         scene.add(camera);
 
-        // LIGHT
-        var light = new THREE.AmbientLight( "#404040" );
-        scene.add(light);
-        light = new THREE.DirectionalLight( "white", 0.25 );
-        light.position.set(1,1,2);
-        scene.add(light);
-
         // SKYBOX
         var skyBoxGeometry = new THREE.BoxGeometry( 10000, 10000, 10000 );
         var skyBoxMaterial = new THREE.MeshBasicMaterial( { color: 0x9999ff, side: THREE.BackSide } );
@@ -84,16 +77,17 @@
         var manager = new THREE.LoadingManager();
         var geometry, material;
         var loader = new THREE.JSONLoader();
+        // {{models}}
         {{#models}}
 
-        <!-- Model: {{&geometry}} -->
+        // > {{&geometry}}
         {{^mesh}}
         geometry = new THREE.{{ geometry }};
         {{/mesh}}
         {{#mesh}}
         loader.load('{{&geometry}}', function (geometry) {
         {{/mesh}}
-        material = new THREE.MeshLambertMaterial({
+        material = new THREE.MeshPhongMaterial({
           {{#texture}}
           map: THREE.ImageUtils.loadTexture('{{&texture}}')
           {{/texture}}
@@ -116,8 +110,19 @@
         });
         {{/mesh}}
         {{/models}}
+
+        // LIGHTING
+        var light;
+        {{#lights}}
         
-        <!-- Player Mesh -->
+        light = new THREE.{{ light_type }}( {{&color}} );
+        light.intensity = {{ intensity }};
+        light.distance = {{ distance }};
+        light.position.set{{ position }};
+        scene.add(light);
+        {{/lights}}
+        
+        // PLAYER
         geometry = new THREE.CylinderGeometry(player_width, player_width, player_height*1.2, 12, 5);
         material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe:true });
         player_mesh = new Physijs.CapsuleMesh(geometry, material, 100);
