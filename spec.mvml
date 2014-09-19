@@ -21,12 +21,15 @@ scene:
   rotation: (0,-30,0)
   color: 0x00ffff
   physics: off
+  shininess: 0
 
 - primitive: plane
   position: (0,-2, 0)
   scale: (200,200,1)
   rotation: (-90,0,0)
   texture: img/grass.jpg
+  specular: black
+  shininess: 5
 
 - mesh: models/invader.obj.js
   position: (10,0,0)

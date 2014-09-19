@@ -75,7 +75,10 @@ var MVML = {
       rotation: "(0,0,0)",
       texture: null,
       physics: true,
-      mass: 0
+      mass: 0,
+      shininess: 30,
+      specular: 0xaaaaaa,
+      emissive: 0x000000
     },
     
     light: {
@@ -191,29 +194,31 @@ var MVML = {
   },
 
   stringify_color: function(color) {
-    return "\'"+color+"\'"
+    if (typeof color === 'string') {
+      return "\'"+color+"\'";
+    }
+    return color;
   },
   
   new_model: function(object) {
     if (object.rotation !== undefined) {
       object.rotation = this.convert_rotation(object.rotation)
     }
-    if (typeof object.color === 'string') {
-      object.color = this.stringify_color(object.color);
-    }
     if (object.physics === "off") {
       object.physics = false;
     }
-    return _.extend({}, this.defaults.model, object);
+    object.color = this.stringify_color(object.color);
+    object.specular = this.stringify_color(object.specular);
+    object.emissive = this.stringify_color(object.emissive);
+    return _.defaults(object, this.defaults.model);
   },
   
   new_light: function(object) {
-    if (typeof object.color === 'string') {
-      object.color = this.stringify_color(object.color);
-    }
-    return _.extend({
+    object.color = this.stringify_color(object.color);
+    object = _.extend({
       light_type: this.js_methods[object.light].light
-    }, this.defaults.light, object);
+    }, object);
+    return _.defaults(object, this.defaults.light);
   },
   
   new_audio: function(object) {

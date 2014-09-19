@@ -89,11 +89,14 @@
         {{/mesh}}
         material = new THREE.MeshPhongMaterial({
           {{#texture}}
-          map: THREE.ImageUtils.loadTexture('{{&texture}}')
+          map: THREE.ImageUtils.loadTexture('{{&texture}}'),
           {{/texture}}
           {{^texture}}
-          color: {{&color}}
+          color: {{&color}},
           {{/texture}}
+          shininess: {{ shininess }},
+          specular: {{&specular}},
+          emissive: {{&emissive}}
         });
         {{#physics}}
         obj = new Physijs.{{ bounding }}(geometry,material,{{ mass }});
