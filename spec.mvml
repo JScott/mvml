@@ -8,8 +8,8 @@ player:
   start: (0,0,30)
   gravity: 30
 skybox:
-  #texture: img/grass.jpg
-  color: black
+  texture: img/space.jpg
+  color: 0x000077
 scene:
 - primitive: sphere
   specular: yellow

@@ -75,9 +75,9 @@
           {{#texture}}
           map: THREE.ImageUtils.loadTexture('{{&texture}}'),
           {{/texture}}
-          {{^texture}}
+          {{#color}}
           color: {{&color}},
-          {{/texture}}
+          {{/color}}
           side: THREE.BackSide
         });
         //material = new THREE.MeshBasicMaterial( { color: 0x9999ff, side: THREE.BackSide } );
@@ -86,7 +86,6 @@
         {{/skybox}}
 
         // SCENE
-        var manager = new THREE.LoadingManager();
         var loader = new THREE.JSONLoader();
         // {{models}}
         {{#models}}
@@ -102,9 +101,9 @@
           {{#texture}}
           map: THREE.ImageUtils.loadTexture('{{&texture}}'),
           {{/texture}}
-          {{^texture}}
+          {{#color}}
           color: {{&color}},
-          {{/texture}}
+          {{/color}}
           shininess: {{ shininess }},
           specular: {{&specular}},
           emissive: {{&emissive}}
