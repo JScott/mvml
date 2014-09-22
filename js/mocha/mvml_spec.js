@@ -57,7 +57,8 @@ describe('MVML', function() {
         'player',
         'models',
         'lights',
-        'audio'
+        'audio',
+        'skybox'
       ];
     });
     
