@@ -9,6 +9,7 @@
     <script src="{{&scripts_path}}/physijs/physi.js"></script>
     <script src="{{&scripts_path}}/three/helpers/Detector.js"></script>
     <script src="{{&scripts_path}}/three/helpers/KeyboardState.js"></script>
+    <script src="{{&scripts_path}}/three/loaders/OBJLoader.js"></script>
     <script src="{{&scripts_path}}/three/CharacterController.js"></script>
     <script src="{{&scripts_path}}/three/InputEvents.js"></script>
     <script src="{{&scripts_path}}/three/CollisionCommander.js"></script>
@@ -80,14 +81,13 @@
           {{/color}}
           side: THREE.BackSide
         });
-        //material = new THREE.MeshBasicMaterial( { color: 0x9999ff, side: THREE.BackSide } );
         var sky_box = new THREE.Mesh( geometry, material );
         scene.add(sky_box);
         {{/skybox}}
 
         // SCENE
-        var loader = new THREE.JSONLoader();
-        // {{models}}
+        var manager = new THREE.LoadingManager();
+        var loader = new THREE.OBJLoader( manager );
         {{#models}}
 
         // > {{&geometry}}
@@ -96,6 +96,9 @@
         {{/mesh}}
         {{#mesh}}
         loader.load('{{&geometry}}', function (geometry) {
+          if (!geometry.computeBoundingBox) {
+            geometry = geometry.children[0].geometry;
+          }
         {{/mesh}}
         material = new THREE.MeshPhongMaterial({
           {{#texture}}
