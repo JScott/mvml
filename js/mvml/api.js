@@ -45,7 +45,7 @@ var MVML = {
   
 
 
-  to_html: function(mvml, callback) {
+  to_html: function(mvml, callback) { 
     var view = this.generate_view(mvml);
     this.ajax_get(this.scripts_path+'/templates/main.html', function(template) {
       var html = Mustache.render(template, view);
@@ -127,13 +127,13 @@ var MVML = {
   
   player_view: function(mvml) {
     //var player_options = _.extends({}, this.defaults.player, (mvml && mvml.player));
-    var player = mvml && mvml.player;
+    var player = mvml && mvml.player || {};
     var player_options = _.defaults(player, this.defaults.player);
     return { player: player_options };
   },
   
   skybox_view: function(mvml) {
-    var skybox = mvml && mvml.skybox;
+    var skybox = mvml && mvml.skybox || {};
     skybox.color = this.stringify_color(skybox.color);
     var skybox_options = _.defaults(skybox, this.defaults.skybox);
     return { skybox: skybox_options };

@@ -16,15 +16,11 @@
     <script src="js/mvml/api.js"></script>
     <script src="js/mocha/mvml_spec.js"></script>
     <script>
-      MVML.scripts_path = 'https://s3.amazonaws.com/mvml-dev';
-      
-      onload = function(){
-        var runner = mocha.run();
-        // runner.globals(['foo', 'bar', 'baz']);
+      var origin = window.location.origin;
+      MVML.scripts_path = origin + '/js/mvml';
 
-        // runner.on('test end', function(test){
-        //   console.log(test.fullTitle());
-        // });
+      onload = function(){
+        mocha.run();
       };
     </script>
   </head>
