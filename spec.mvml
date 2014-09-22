@@ -7,6 +7,9 @@ player:
   max_jump_speed: 20
   start: (0,0,30)
   gravity: 30
+skybox:
+  #texture: img/grass.jpg
+  color: black
 scene:
 - primitive: sphere
   specular: yellow
@@ -45,8 +48,8 @@ scene:
   distance: 40
   color: white
 
-- light: directional
-  position: (0,1,-1)
+#- light: directional
+#  position: (0,1,-1)
 
 - light: ambient
   color: 0x202020

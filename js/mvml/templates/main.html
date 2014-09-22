@@ -52,6 +52,7 @@
         document.body.appendChild( container );
 
         // SCENE
+        var geometry, material, materials;
         scene = new Physijs.Scene({
           reportsize: {{ scene_count }}
         });
@@ -67,15 +68,25 @@
         camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
         scene.add(camera);
 
+        {{#skybox}}
         // SKYBOX
-        var skyBoxGeometry = new THREE.BoxGeometry( 10000, 10000, 10000 );
-        var skyBoxMaterial = new THREE.MeshBasicMaterial( { color: 0x9999ff, side: THREE.BackSide } );
-        var skyBox = new THREE.Mesh( skyBoxGeometry, skyBoxMaterial );
-        scene.add(skyBox);
+        geometry = new THREE.BoxGeometry( 10000, 10000, 10000 );
+        material = new THREE.MeshBasicMaterial({
+          {{#texture}}
+          map: THREE.ImageUtils.loadTexture('{{&texture}}'),
+          {{/texture}}
+          {{^texture}}
+          color: {{&color}},
+          {{/texture}}
+          side: THREE.BackSide
+        });
+        //material = new THREE.MeshBasicMaterial( { color: 0x9999ff, side: THREE.BackSide } );
+        var sky_box = new THREE.Mesh( geometry, material );
+        scene.add(sky_box);
+        {{/skybox}}
 
         // SCENE
         var manager = new THREE.LoadingManager();
-        var geometry, material;
         var loader = new THREE.JSONLoader();
         // {{models}}
         {{#models}}

@@ -86,6 +86,12 @@ var MVML = {
       intensity: 1.0,
       distance: 10.0,
       position: "(0,0,0)"
+    },
+    
+    skybox: {
+      texture: null,
+      textures: null,
+      color: 0x9999ff
     }
   },
 
@@ -104,7 +110,8 @@ var MVML = {
     var template = _.extend(
       this.base_view(mvml_object), 
       this.player_view(mvml_object),
-      this.scene_view(mvml_object)
+      this.scene_view(mvml_object),
+      this.skybox_view(mvml_object)
     );
     //log.trace(template);
     return template;
@@ -119,8 +126,17 @@ var MVML = {
   },
   
   player_view: function(mvml) {
-    var player_options = _.extend({}, this.defaults.player, (mvml && mvml.player));
+    //var player_options = _.extends({}, this.defaults.player, (mvml && mvml.player));
+    var player = mvml && mvml.player;
+    var player_options = _.defaults(player, this.defaults.player);
     return { player: player_options };
+  },
+  
+  skybox_view: function(mvml) {
+    var skybox = mvml && mvml.skybox;
+    skybox.color = this.stringify_color(skybox.color);
+    var skybox_options = _.defaults(skybox, this.defaults.skybox);
+    return { skybox: skybox_options };
   },
   
   scene_view: function(mvml) {
@@ -133,7 +149,9 @@ var MVML = {
     }
     template.scene_count = template.models.length +
                            template.lights.length +
-                           template.audio.length + 1;
+                           template.audio.length +
+                           1 + //skybox
+                           1;
     //log.trace(template);
     return template;
   },
@@ -223,5 +241,5 @@ var MVML = {
   
   new_audio: function(object) {
     return {};
-  }
+  }  
 };
