@@ -1,32 +1,74 @@
 ---
-title: Hello metaverse!
+# Be sure to put strings in quotation marks if there are special characters present.
+title: "#Special characters: present" # default: "MVML Space"
+
+
+
+
 player:
-  move_speed: 15
-  turn_speed: 1.5
-  min_jump_speed: 0
-  max_jump_speed: 20
-  start: (0,0,30)
-  gravity: 30
+  # The speed of moving and turning for players.
+  move_speed: 20   # default: 15.0
+  turn_speed: 2    # default: 1.5
+
+  # The starting position of all characters.
+  # All vectors are in this format: 3 floats encapsulated with parentheses.
+  # Whitespace in the parentheses is ignored.
+  start: (0,0,30)  # default: (0,0,0)
+  gravity: 30      # default: 50
+
+
+
+
 skybox:
-  texture: img/space.jpg
-  color: 0x000077
+  # The URL of the texture for all 6 sides of your skybox.
+  # These work as absolute or relative paths, just like an HTML link.
+  # Just be sure you have access to cross-domain images via CORS.
+  texture: img/space.jpg  # default: null
+
+  # The color works with or without a texture.
+  # You may find this color format familiar if you work with CSS.
+  # Colors can either be hex values or strings with color names.
+  color: 0x000077         # default: 0x9999ff
+
+
+
+
 scene:
+# Primitives can be the following types:
+# * sphere
+# * box
+# * plane
 - primitive: sphere
-  specular: yellow
-  shininess: 40
+  # Just as before, color values can be either hex values or color names as strings.
+  color: blue            # default: 0xffffff
+  scale: (2,2,4)         # default: (1,1,1)
+  position: (1,0, 0)     # default: (0,0,0)
+  rotation: (90,0,10)    # default: (0,0,0)
+  # Just as before, you can use relative URLs just like you would in HTML.
+  texture: img/grass.jpg # default: null
 
-- primitive: box # wall
-  position: (0, 0, -20)
-  scale: (30,10,1)
-  color: 0x00ff00
+  # The weight of physics objects. 0 mass is immovable.
+  mass: 200              # default: 0
 
+  # These properties determine how the object's material interacts with lighting.
+  # How the object's material interacts with lighting
+  shininess: 20          # default: 30
+  specular: yellow       # default: 0xaaaaaa
+  emissive: red          # default: 0x000000
+
+
+# You also only need to fill out as many attributes as you want.
+# Defaults will be provided for those you don't use.
 - primitive: box
-  position: (-10, 1, 0)
-  scale: (2,2,4)
-  rotation: (0,-30,0)
-  color: 0x00ffff
-  physics: off
-  
+  # You can turn off physics interactions for an object.
+  # It won't fall and other objects, including the player, will phase through it.
+  physics: false         # default: true
+  position: (-10,1,0)
+  scale: (5,1.5,5)
+  color: blue
+
+
+# You probably want a floor so you don't just fall down forever.
 - primitive: plane
   position: (0,-2, 0)
   scale: (200,200,1)
@@ -35,21 +77,35 @@ scene:
   specular: black
   shininess: 0
 
+
+# Meshes are declared like primitives but with a URL to a model file instead of a predefined type.
+# Meshes also have all the same attributes as primitives.
+# Currently you can only use the OBJ format for models.
 - mesh: models/invader.obj
   position: (10,0,0)
-  scale: (0.05, 0.05, 0.05)
-  color: red
+  scale: (0.05,  0.05, 0.05)
   mass: 200
-  shininess: 10
+  shininess: 50
 
+
+# Lights are similar to primitives in that they come in a handful of formats:
+# * point
+# * directional
+# * ambient
 - light: point
-  position: (0, 2,10)
-  intensity: 0.5
-  distance: 40
-  color: white
+  # For a point light, position is simply where it is in the space.
+  position: (0, 2,10)  # default: (0,0,0)
+  # Intensity is how bright the light shines.
+  intensity: 0.5       # default: 1.0
+  # Distance is how far.
+  distance: 40         # default: 10.0
+  color: white         # default: 0x404040
 
-#- light: directional
-#  position: (0,1,-1)
+- light: directional
+  # This sets the direction the light will shine.
+  position: (0,1,1)
 
+# Ambient is a lighting applies evenly to everything.
+# Because of this, it does nothing with position.
 - light: ambient
   color: 0x202020
