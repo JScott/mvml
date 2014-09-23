@@ -1,5 +1,5 @@
 ---
-title: "Special characters: present"
+title: Hello MetaVerse!
 player:
   start: (0,0,30)
   gravity: 30
@@ -11,7 +11,7 @@ scene:
   specular: yellow
   shininess: 40
 
-- primitive: box # wall
+- primitive: box
   position: (0, 0, -20)
   scale: (30,10,1)
   color: 0x00ff00
