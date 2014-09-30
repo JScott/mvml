@@ -3,6 +3,7 @@ title: Hello MetaVerse!
 player:
   start: (0,0,30)
   gravity: 30
+  move_speed: 30
 skybox:
   texture: img/space.jpg
   color: 0x000077
@@ -12,9 +13,16 @@ scene:
   shininess: 40
 
 - primitive: box
-  position: (0, 0, -20)
+  position: (0, 3, -20)
   scale: (30,10,1)
   color: 0x00ff00
+
+- primitive: box
+  position: (0, 1.5, -19.25)
+  scale: (5,7,0.5)
+  color: black
+  specular: black
+  name: door
 
 - primitive: box
   position: (-10, 1, 0)

@@ -57,6 +57,7 @@
         scene = new Physijs.Scene({
           reportsize: {{ scene_count }}
         });
+        MVML.scene = scene;
         scene.setGravity(new THREE.Vector3(0, -{{ player.gravity }}, 0));
 
         // CAMERA
@@ -106,6 +107,7 @@
           {{/texture}}
           {{#color}}
           color: {{&color}},
+          ambient: {{&color}},
           {{/color}}
           shininess: {{ shininess }},
           specular: {{&specular}},
@@ -117,6 +119,9 @@
         {{^physics}}
         obj = new THREE.Mesh(geometry,material);
         {{/physics}}
+        {{#name}}
+        obj.name = '{{ name }}';
+        {{/name}}
         obj.position.set{{ position }};
         obj.rotation.set{{ rotation }};
         obj.scale.set{{ scale }};
