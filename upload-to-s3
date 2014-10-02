@@ -2,7 +2,7 @@
 BUCKET='s3://dev.mvml.net/'
 if [ -n "$1" ] && [ $1 == 'production' ]
 then
-  BUCKET='s3://www.mvml.net/'
+  BUCKET='s3://mvml.net/'
 fi
 
 COMMAND="aws s3 sync . ${BUCKET}"
