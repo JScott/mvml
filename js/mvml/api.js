@@ -19,6 +19,9 @@ var MVML = {
 
   load_tag: function() {
     var mvml = document.getElementsByTagName('mvml')[0];
+    if (mvml && mvml.getAttribute('auto-load') == 'false') {
+      return;
+    }
     var src = mvml.getAttribute('src');
     if (src) {
       MVML.load_file(src);
