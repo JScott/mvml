@@ -30,5 +30,20 @@ _.extend(MVML, {
         object.__dirtyRotation = true;
       }
     };
+  },
+  
+  move: function(object) {
+    object = this.find(object);
+    var position = object.position;
+    return {
+      by: function(x,y,z) {
+        position.set(position.x+x, position.y+y, position.z+z);
+        object.__dirtyPosition = true;
+      },
+      to: function(x,y,z) {
+        position.set(x,y,z);
+        object.__dirtyPosition = true;
+      }
+    };
   }
 });
