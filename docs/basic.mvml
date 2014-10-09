@@ -23,7 +23,7 @@ skybox:
   # The URL of the texture for all 6 sides of your skybox.
   # These work as absolute or relative paths, just like an HTML link.
   # Just be sure you have access to cross-domain images via CORS.
-  texture: img/space.jpg  # default: null
+  texture: /img/space.jpg  # default: null
 
   # The color works with or without a texture.
   # You may find this color format familiar if you work with CSS.
@@ -45,7 +45,7 @@ scene:
   position: (1,0, 0)     # default: (0,0,0)
   rotation: (90,0,10)    # default: (0,0,0)
   # Just as before, you can use relative URLs just like you would in HTML.
-  texture: img/grass.jpg # default: null
+  texture: /img/grass.jpg # default: null
 
   # The weight of physics objects. 0 mass is immovable.
   mass: 200              # default: 0
@@ -73,7 +73,7 @@ scene:
   position: (0,-2, 0)
   scale: (200,200,1)
   rotation: (-90,0,0)
-  texture: img/grass.jpg
+  texture: /img/grass.jpg
   specular: black
   shininess: 0
 
@@ -81,7 +81,7 @@ scene:
 # Meshes are declared like primitives but with a URL to a model file instead of a predefined type.
 # Meshes also have all the same attributes as primitives.
 # Currently you can only use the OBJ format for models.
-- mesh: models/invader.obj
+- mesh: /models/invader.obj
   position: (10,0,0)
   scale: (0.05,  0.05, 0.05)
   mass: 200
