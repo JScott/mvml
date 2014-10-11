@@ -1,10 +1,6 @@
-var MVML = {
-  init: function() {
-    var scripts = document.getElementsByTagName('script');
-    var scripts_path = scripts[scripts.length-1].src.split('/');
-    scripts_path.pop();
-    this.scripts_path = scripts_path.join('/');
-  },
+var MVML = (function() {
+  return {
+  scripts_path: '/js/mvml',
   
   ajax_get: function(url, callback) {
     var get = new XMLHttpRequest();
@@ -244,5 +240,7 @@ var MVML = {
   
   new_audio: function(object) {
     return {};
-  }  
-};
+  }
+  
+  };
+})();
