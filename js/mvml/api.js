@@ -1,5 +1,5 @@
-var MVML = (function() {
-  return {
+var MVML = MVML || {};
+_.extend(MVML, {
   scripts_path: '/js/mvml',
   
   ajax_get: function(url, callback) {
@@ -241,6 +241,4 @@ var MVML = (function() {
   new_audio: function(object) {
     return {};
   }
-  
-  };
-})();
+});

@@ -62,10 +62,12 @@
           <div class="col-md-6 col-sm-6">
             <h2>Start</h2>
             <p>
-            To use the API, just add an <code class="html">&lt;mvml></code> tag and include these scripts:
-            <pre><code class="html">&lt;script src="js/mvml/dependencies.js">&lt;/script>
-&lt;script src="js/mvml/api.js">&lt;/script>
-&lt;script src="js/mvml/load.js">&lt;/script></code></pre>
+            To use the API, create an HTML page like this:
+            <pre><code class="html">&lt;script src="js/mvml.js">&lt;/script>
+&lt;mvml>
+---
+title: My MVML space
+&lt;/mvml></code></pre>
             If there's a <code class="html">src</code> attribute in the tag, it'll load the MVML from an external file.
             Otherwise it'll take the MVML from the inner text.
             Remember that MVML is sensitive to indentation and best-practice HTML formatting interferes with that
