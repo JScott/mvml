@@ -16,12 +16,9 @@
     <script src="js/mocha/api_spec.js"></script>
     <script src="js/mocha/events_spec.js"></script>
     <script>
-      var origin = window.location.origin;
-      MVML.scripts_path = origin + '/js/mvml';
-
-      onload = function(){
-        mocha.run();
-      };
+      window.addEventListener('load', function() {
+        mocha.run();      
+      }, false)
     </script>
   </head>
   <body>

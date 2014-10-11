@@ -11,7 +11,7 @@ _.extend(MVML, {
 
       return {
         remove: function() {
-          delete this.list[hook_name].queue[index];
+          MVML.hook.list[hook_name].queue.splice(index,1);
 		}
 	  };
     },

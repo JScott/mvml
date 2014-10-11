@@ -8,42 +8,47 @@ describe('PubSub Events', function() {
     };
   });
 
-  describe('.to_html', function() {
-    describe('with valid MVML', function() {
-      it("generates WebGL/three.js HTML", function(done) {
-        MVML.to_html(specs.good, function(html) {
-          expect(html).to.match(/<html.*>/);
-          expect(html).to.match(/three.*js/);
-          done();
-        });
-      });
-      it("uses the given MVML variables", function(done) {
-        MVML.to_html(specs.good, function(html) {
-          expect(html).to.match(/<title>test<\/title>/);
-          expect(html).to.match(/SphereGeometry/);
-          done();
-        });
-      });
+  describe('.hook.on', function() {
+    var name, callback;
+    before(function() {
+      name = 'test';
+      callback = null;
     });
-    
-    describe('with an empty string', function() {
-      it("still generates WebGL/three.js HTML", function(done) {
-        MVML.to_html(specs.empty, function(html) {
-          expect(html).to.match(/<html.*>/);
-          expect(html).to.match(/three.*js/);
-          done();
-        });
-      });
+    beforeEach(function() {
+      MVML.hook.list = {};
     });
-    
-    describe('with badly-formatted MVML', function() {
-      it("throws a YAML parsing exception", function() {
-        expect(function() { MVML.to_html(specs.bad); }).to.throwException(function(e) { 
-          var exception_type = e.name;
-          expect(exception_type).to.equal('YAMLException');
-        });
-      });
+    it("creates a new hook and adds the given callback", function() {
+      MVML.hook.on(name, callback);
+      var hooks = MVML.hook.list
+      expect(hooks).to.have.key(name);
+      expect(hooks[name].queue).to.not.be.empty();
     });
-
+    it("returns an object that facilitates callback removal", function() {
+      var hook = MVML.hook.on(name, callback);
+      console.log(MVML.hook.list[name]);
+      hook.remove();
+      var hooks = MVML.hook.list
+      expect(hooks).to.have.key(name);
+      console.log(hooks[name]);
+      expect(hooks[name].queue).to.be.empty();
+    });
+    it("converts hook names into strings", function() {
+      var given_names = [
+        'hi',
+        1,
+        1.1,
+        null
+      ];
+      var expected_names = [
+        'hi',
+        '1',
+        '1.1',
+        'null'
+      ];
+      _.each(given_names, function(name) {
+        MVML.hook.on(name, callback);
+      });
+      expect(MVML.hook.list).to.only.have.keys(expected_names);
+    });
   });
 });
