@@ -1,4 +1,4 @@
-describe('MVML API', function() {
+describe('Core API', function() {
   var specs;
   before(function() {
     specs = {
