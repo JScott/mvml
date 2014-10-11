@@ -1,33 +1,28 @@
 var MVML = MVML || {};
 _.extend(MVML, {
-  events: (function(){
-    var topics = {};
+  event: (function(){
+    var topic = {};
     return {
-      subscribe: function(topic_name, listener) {
-        var topic = topics[topic_name];
-        
-        if ( _.isUndefined(topic) ) {
-          topic = { queue: [] };
+      subscribe: function(name, listener) {
+        if ( _.isUndefined(topic[name]) ) {
+          topic[name] = { queue: [] };
         }
-        var index = topic.queue.push(listener) - 1;
+        var index = topic[name].queue.push(listener) - 1;
 
 	    return {
 		  remove: function() {
-			delete topic.queue[index];
+			delete topic[name].queue[index];
 		  }
 	    };
       },
       
-      publish: function(topic_name, info) {
-        var topic = topics[topic_name];
-        
-        if(_.isUndefined(topic) || topic.queue.length == 0) {
-          console.log('Unknown event name: '+topic_name);
+      publish: function(name, data) {
+        if(_.isUndefined(topic[name]) || topic[name].queue.length == 0) {
           return;
         }
 
-        topic.queue.forEach(function(item) {
-      	  item(info || {});
+        topic[name].queue.forEach(function(callback) {
+      	  callback(data || null);
         });
       }
     };
