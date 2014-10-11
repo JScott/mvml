@@ -35,9 +35,11 @@ scene:
   name: blue-box
   on:
     # Remember that these strings are just JavaScript.
-    # You can use whatever code you want here.
+    # You can use whatever code you want here. Remember to separate commands by a semicolon.
     bump: alert('oof!')
-    click: var click = 'tick'; alert(click)
+    click: >
+      var click = 'tick';
+      alert(click)
 
 - primitive: plane
   position: (0,-2, 0)
