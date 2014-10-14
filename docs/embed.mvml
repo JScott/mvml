@@ -1,0 +1,65 @@
+---
+title: "MVML Interactions"
+
+skybox:
+  color: 0x659cef
+
+# You can embed the following objects:
+# * js
+# * css
+# * html
+# * script
+# * style
+embed:
+- js: /docs/embed/alert.js
+- html: >
+    <div class='embedded-html'>Augmented user interface</div>
+- css: /docs/embed/ui.css
+- script: alert('embedded script loaded');
+
+# This is also where you can hook onto the following MVML events:
+# * bump
+# * click
+# * render
+- script: >
+    MVML.hook.on('bump', function(hit_object, hitting_object) {
+      if (hit_object.name === 'red-box') {
+        hit_object.material.color.set('white');
+      }
+    });
+    MVML.hook.on('click', function(clicked_object) {
+      if (clicked_object.name === 'blue-box') {
+        MVML.rotate(clicked_object).to(0,0,35);
+      }
+    });    
+    MVML.hook.on('render', function(time_delta) {
+      var degrees = 35.0 * time_delta;
+      MVML.rotate('blue-box').to(degrees,0,0);
+    });    
+    
+scene:
+- primitive: box
+  color: red
+  scale: (5,5,5)
+  position: (-10,3,-30)
+  name: red-box
+
+- primitive: box
+  color: blue
+  scale: (5,5,5)
+  position: (10,3,-30)
+  name: blue-box
+
+- primitive: plane
+  position: (0,-2, 0)
+  scale: (200,200,1)
+  rotation: (-90,0,0)
+  texture: /img/grass.jpg
+  specular: black
+  shininess: 0
+
+- light: directional
+  position: (0,1,1)
+
+- light: ambient
+  color: 0x505050
