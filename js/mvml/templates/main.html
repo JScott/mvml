@@ -53,7 +53,8 @@
       Physijs.scripts.ammo = URL.createObjectURL(ammo_blob);
 
       var container;
-      var camera, controls, scene, renderer;
+      var camera, controls, scene, renderer, projector;
+      var models = [];
       var player_mesh;
       var keyboard = new THREEx.KeyboardState();
 
@@ -70,6 +71,9 @@
         // CONTAINER
         container = document.createElement( 'div' );
         document.body.appendChild( container );
+
+        // PROJECTOR
+        projector = new THREE.Projector();
 
         // SCENE
         var geometry, material, materials;
@@ -146,13 +150,18 @@
         obj.scale.set{{ scale }};
         {{#on}}
         {{#click}}
-        obj.on_click = function() { {{ click }} };
+        obj.addEventListener( 'click', function() {
+          {{&click}}
+        });
         {{/click}}
         {{#bump}}
-        obj.on_bump = function() { {{ bump }} };
+        obj.addEventListener( 'collision', function( other_object, relative_velocity, relative_rotation, contact_normal ) {
+          {{&bump}}
+        });
         {{/bump}}
         {{/on}}
         scene.add(obj);
+        models.push(obj);
         {{#mesh}}
         });
         {{/mesh}}
@@ -228,13 +237,9 @@
         projector.unprojectVector( vector, camera );
 
         var raycaster = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
-        var intersects = raycaster.intersectObjects( objects );
+        var intersects = raycaster.intersectObjects( models );
         if ( intersects.length > 0 ) {
-          var on_click = intersects[0].object.on_click
-          if (typeof on_click !== 'undefined') {
-            on_click();
-          }
-          //MVML.hook.trigger('click', intersects[0].object);
+          intersects[0].object.dispatchEvent('click');
         }
       }
 

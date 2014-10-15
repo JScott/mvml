@@ -17,9 +17,11 @@ scene:
   position: (10,3,-30)
   name: blue-box
   on:
-    bump: this.material.color.set('white');
+    bump: >
+      this.material.color.set('white');
+      this.material.ambient.set('white');
     click: >
-      MVML.rotate('blue-box').by(0,0,-30);
+      MVML.rotate(this).by(0,0,-30);
       MVML.rotate('red-box').by(0,0,35);
 
 - primitive: plane
