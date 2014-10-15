@@ -33,7 +33,7 @@ scene:
       this.material.ambient.set('white');
       MVML.move(this).by(0,0,-20);
       console.log('You spooked me! :o');
-    
+
     # 'this' will refer to the object being triggered.
     # Also note that we make use of core JS, Three.js, and MVML helpers together.
 

@@ -148,18 +148,18 @@
         obj.position.set{{ position }};
         obj.rotation.set{{ rotation }};
         obj.scale.set{{ scale }};
-        {{#on}}
-        {{#click}}
         obj.addEventListener( 'click', function() {
+          {{#on}}
           {{&click}}
+          {{/on}}
+          MVML.hook.trigger('click', this);
         });
-        {{/click}}
-        {{#bump}}
         obj.addEventListener( 'collision', function( other_object, relative_velocity, relative_rotation, contact_normal ) {
+          {{#on}}
           {{&bump}}
+          {{/on}}
+          MVML.hook.trigger('bump', this, other_object);
         });
-        {{/bump}}
-        {{/on}}
         scene.add(obj);
         models.push(obj);
         {{#mesh}}
