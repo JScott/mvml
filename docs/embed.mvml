@@ -12,26 +12,17 @@ skybox:
 # * style
 embed:
 - js: /docs/embed/alert.js
-- html: >
-    <div class='embedded-html'>Augmented user interface</div>
+- html: <div class='embedded-html'>Augmented user interface</div>
 - css: /docs/embed/ui.css
 - script: alert('embedded script loaded');
+- style: >
+    .embedded-html {
+      font-size: 14px;
+      font-color: green;
+    }
 
-# This is also where you can hook onto the following MVML events:
-# * bump
-# * click
-# * render
+# This is also where you can hook onto the MVML render event.
 - script: >
-    MVML.hook.on('bump', function(hit_object, hitting_object) {
-      if (hit_object.name === 'red-box') {
-        hit_object.material.color.set('white');
-      }
-    });
-    MVML.hook.on('click', function(clicked_object) {
-      if (clicked_object.name === 'blue-box') {
-        MVML.rotate(clicked_object).to(0,0,35);
-      }
-    });    
     MVML.hook.on('render', function(time_delta) {
       var degrees = 35.0 * time_delta;
       MVML.rotate('blue-box').to(degrees,0,0);

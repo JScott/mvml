@@ -14,9 +14,28 @@
     <script src="{{&scripts_path}}/three/InputEvents.js"></script>
     <script src="{{&scripts_path}}/three/CollisionCommander.js"></script>
     <script src="{{&scripts_path}}/three/FetchBlob.js"></script>
+    {{#embed}}
+    {{#js}}
+    <script src="{{&js}}"></script>
+    {{/js}}
+    {{#css}}
+    <link rel="stylesheet" type="text/css" href="{{&css}}">
+    {{/css}}
+    {{#script}}
+    <script>{{ script }}</script>
+    {{/script}}
+    {{#style}}
+    <style>{{ style }}</style>
+    {{/style}}
+    {{/embed}}
   </head>
 
   <body>
+    {{#embed}}
+    {{#html}}
+    {{&html}}
+    {{/html}}
+    {{/embed}}
 
     <div id='pan-icon'>
       <img src='{{&scripts_path}}/../../img/pan-icon.png'>
@@ -125,6 +144,14 @@
         obj.position.set{{ position }};
         obj.rotation.set{{ rotation }};
         obj.scale.set{{ scale }};
+        {{#on}}
+        {{#click}}
+        obj.on_click = function() { {{ click }} };
+        {{/click}}
+        {{#bump}}
+        obj.on_bump = function() { {{ bump }} };
+        {{/bump}}
+        {{/on}}
         scene.add(obj);
         {{#mesh}}
         });
@@ -181,6 +208,7 @@
         // EVENTS
         //THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
         window.addEventListener( 'resize', onWindowResize, false );
+        document.addEventListener( 'mousedown', onDocumentMouseDown, false );
       };
 
       function onWindowResize( event ) {
@@ -192,11 +220,29 @@
         camera.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
         camera.updateProjectionMatrix();
       };
+      
+      function onDocumentMouseDown( event ) {
+        event.preventDefault();
+
+        var vector = new THREE.Vector3( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1, 0.5 );
+        projector.unprojectVector( vector, camera );
+
+        var raycaster = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
+        var intersects = raycaster.intersectObjects( objects );
+        if ( intersects.length > 0 ) {
+          var on_click = intersects[0].object.on_click
+          if (typeof on_click !== 'undefined') {
+            on_click();
+          }
+          //MVML.hook.trigger('click', intersects[0].object);
+        }
+      }
 
       function next_frame() {
         requestAnimationFrame( next_frame );
         renderer.render( scene, camera );
         character.update( clock.getDelta() );
+        MVML.hook.trigger('render', clock.getDelta());
         scene.simulate();
       };
 
