@@ -16,13 +16,26 @@ scene:
   scale: (5,5,5)
   position: (10,3,-30)
   name: blue-box
+  # You can use this attribute to set interactions with an object.
+  # All of the values are strings that represent the JavaScript to run when triggered.
   on:
+    
+    # Click allows you to trigger scripts when this object is clicked.
+    # You can make use of MVML helpers to rotate or move an object.
+    # All the helpers take a selector, either a string for name, integer for id, or object for the object itself.
+    click: MVML.rotate('red-box').to(10,-80,35);
+    
+    # Bump allows you to trigger scripts when something collides with this object.
+    # Note that this is any collision with any object. Use an if statement to narrow this if required.
+    # You can also make use of multi-line YAML to forge complex scripts.
     bump: >
       this.material.color.set('white');
       this.material.ambient.set('white');
-    click: >
-      MVML.rotate(this).by(0,0,-30);
-      MVML.rotate('red-box').by(0,0,35);
+      MVML.move(this).by(0,0,-20);
+      console.log('You spooked me! :o');
+    
+    # 'this' will refer to the object being triggered.
+    # Also note that we make use of core JS, Three.js, and MVML helpers together.
 
 - primitive: plane
   position: (0,-2, 0)
