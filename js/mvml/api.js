@@ -128,7 +128,6 @@ _.extend(MVML, {
   },
   
   embed_view: function(mvml) {
-  console.log(mvml);
     return {
       embed: mvml.embed
     };

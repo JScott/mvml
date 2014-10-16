@@ -80,8 +80,10 @@ THREE.InputEvents = function ( controller, dom_hud ) {
   };
 
   this.mousedown = function( event ) {
-    this.mouseDragging = true;
-    this.pan_start(event);
+    if (event.target.tagName == 'CANVAS') {
+      this.mouseDragging = true;
+      this.pan_start(event);
+    }
   };
   
   this.in_iframe = function() {

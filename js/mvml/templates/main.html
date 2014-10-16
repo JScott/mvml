@@ -70,6 +70,7 @@
       function init() {
         // CONTAINER
         container = document.createElement( 'div' );
+        //container.setAttribute('id', 'mvml-canvas');
         document.body.appendChild( container );
 
         // PROJECTOR
@@ -194,7 +195,7 @@
 
         // RENDERER
         if ( Detector.webgl ) {
-          renderer = new THREE.WebGLRenderer( {antialias:true} );
+          renderer = new THREE.WebGLRenderer({ antialias:true });
         }
         else {
           renderer = new THREE.CanvasRenderer();
