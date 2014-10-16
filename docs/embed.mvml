@@ -11,35 +11,30 @@ skybox:
 # * script
 # * style
 embed:
-- js: /docs/embed/alert.js
+- js: /docs/embed/main.js
 - html: <div class='embedded-html'>Augmented user interface</div>
-- css: /docs/embed/ui.css
-- script: alert('embedded script loaded');
+- css: /docs/embed/main.css
+- script: console.log('embedded script loaded');
 - style: >
     .embedded-html {
       font-size: 14px;
-      font-color: green;
+      color: green;
+      background: white;
     }
 
 # This is also where you can hook onto the MVML render event.
 - script: >
     MVML.hook.on('render', function(time_delta) {
       var degrees = 35.0 * time_delta;
-      MVML.rotate('blue-box').to(degrees,0,0);
+      MVML.rotate('spinning-box').by(degrees/2, 0, degrees);
     });    
     
 scene:
 - primitive: box
-  color: red
-  scale: (5,5,5)
-  position: (-10,3,-30)
-  name: red-box
-
-- primitive: box
   color: blue
   scale: (5,5,5)
-  position: (10,3,-30)
-  name: blue-box
+  position: (0,3,-30)
+  name: spinning-box
 
 - primitive: plane
   position: (0,-2, 0)

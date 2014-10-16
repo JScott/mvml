@@ -57,6 +57,8 @@ _.extend(MVML, {
   defaults: {
     title: "MVML Space",
     motd: "",
+
+    embed: {},
     
     player: {
       move_speed: 15.0,
@@ -107,7 +109,8 @@ _.extend(MVML, {
   generate_view: function(mvml) {
     var mvml_object = jsyaml.load(mvml);
     var template = _.extend(
-      this.base_view(mvml_object), 
+      this.base_view(mvml_object),
+      this.embed_view(mvml_object), 
       this.player_view(mvml_object),
       this.scene_view(mvml_object),
       this.skybox_view(mvml_object)
@@ -121,6 +124,13 @@ _.extend(MVML, {
       scripts_path: this.scripts_path,
       title: (mvml && mvml.title) || this.defaults.title,
       motd: (mvml && mvml.motd) || this.defaults.motd
+    };
+  },
+  
+  embed_view: function(mvml) {
+  console.log(mvml);
+    return {
+      embed: mvml.embed
     };
   },
   
