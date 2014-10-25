@@ -190,7 +190,7 @@ _.extend(MVML, {
       bounding: 'BoxMesh' // PlaneMesh is infinite
     },
     mesh: {
-      bounding: 'BoxMesh' // TODO: option of ConcaveMesh or ConvexMesh
+      bounding: 'ConcaveMesh' // TODO: option of ConcaveMesh or ConvexMesh
     },
     point: {
       light: 'PointLight'

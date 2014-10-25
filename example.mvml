@@ -1,29 +1,12 @@
 ---
 title: Hello MetaVerse!
 player:
-  start: (0,0,30)
   gravity: 30
   move_speed: 30
 skybox:
   texture: img/space.jpg
   color: 0x000077
 scene:
-- primitive: sphere
-  specular: yellow
-  shininess: 40
-
-- primitive: box
-  position: (0, 3, -20)
-  scale: (30,10,1)
-  color: 0x00ff00
-
-- primitive: box
-  position: (0, 1.5, -19.25)
-  scale: (5,7,0.5)
-  color: black
-  specular: black
-  name: door
-
 - primitive: box
   position: (-10, 1, 0)
   scale: (2,2,4)
@@ -39,18 +22,12 @@ scene:
   specular: black
   shininess: 0
 
-- mesh: models/invader.obj
-  position: (10,0,0)
-  scale: (0.05,  0.05, 0.05)
-  color: red
-  mass: 200
+- mesh: models/castle.obj
+  scale: (30,30,30)
   shininess: 10
 
-- light: point
-  position: (0, 2,10)
-  intensity: 0.5
-  distance: 40
-  color: white
+- light: directional
+  position: (1, 1, 1)
 
 - light: ambient
   color: 0x202020
