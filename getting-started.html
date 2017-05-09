@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="How to start using the MVML framework">
+    <meta name="author" content="JScott">
+    <title> MVML </title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css">
+    <link href="css/core.css" rel="stylesheet">
+  </head>
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">MVML</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="index.html">Home</a></li>
+            <li class="active"><a>Getting Started</a></li>
+            <li><a href="https://github.com/JScott/mvml">Github</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="jumbotron">
+      <div class="container">
+        <div class="header">
+          <h1>Getting Started</h1>
+          <p>
+            An overview of MVML, it's API's and helpers, and how to integrate it into your website.
+          </p>
+        </div>
+      </div>
+    </div>
+
+      <section class="usage">
+        <div class="container">          
+          <h1 class="page-header">Usage</h1>
+          <p class="lead">
+            MVML isn't natively supported by browsers yet. Our API converts it into HTML and JavaScript for you.
+          </p>
+        <div class="row">
+          <div class="col-md-6 col-sm-6">
+            <h2>Download</h2>
+            <p>
+              To use the API, just download and unpack it into the root of your application.
+            </p>
+            <a class="btn btn-primary btn-lg" href="dist/mvml-dist.zip">Download</a>
+          </div>
+          <div class="col-md-6 col-sm-6">
+            <h2>Start</h2>
+            <p>
+            To use the API, just add an <code class="html">&lt;mvml></code> tag and include these scripts:
+            <pre><code class="html">&lt;script src="js/mvml/dependencies.js">&lt;/script>
+&lt;script src="js/mvml/api.js">&lt;/script>
+&lt;script src="js/mvml/load.js">&lt;/script></code></pre>
+            If there's a <code class="html">src</code> attribute in the tag, it'll load the MVML from an external file.
+            Otherwise it'll take the MVML from the inner text.
+            Remember that MVML is sensitive to indentation and best-practice HTML formatting interferes with that
+            See the source of <a href="example.html">this page</a> for an example.
+            </p>
+          </div>
+        </div>
+        </div>
+      </section>
+      <section class="syntax">
+        <div class="container">
+          <h1 class="page-header">Syntax</h1>
+          <p class="lead">
+            Just like HTML, MVML is built out of a syntax of tags.
+            In order to build worlds, you'll need to understand these.
+          </p>
+        <div class="row">
+          <div class="col-md-6 col-sm-6">
+            <h2>YAML</h2>
+            <p>
+              Just like HTML is essentially <a href="http://www.w3.org/XML/">XML</a>,
+              MVML is essentially <a href="http://www.yaml.org/">YAML</a>.
+              This is important because unlike XML, YAML is very strict on indentation.
+              Even missing a space could cause an error which forces us to write legibly.
+            </p>
+            <pre><code class="yaml"># Valid:
+title: Hello metaverse!
+scene:
+- primative: sphere
+- primative: box
+  color: red
+
+# Broken
+ title: Hey metaverse
+  scene:
+- primative:
+sphere
+- primative: box
+color: red</code></pre>
+          </div>
+          <div class="col-md-6 col-sm-6">
+            <h2>Components</h2>
+            <p>
+              You create worlds in MVML by stringing together components such as the
+              <code>scene</code> tag or <code>player</code> tag. Knowing how to use these
+              is important.
+            </p>
+            <p>
+              Unfortunately I don't have full documentation of this yet. Until I do,
+              please read <a href="spec.mvml">spec.mvml</a>
+              which uses each component and its properties at least once. You can see it
+              rendered <a href="spec.html">here</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <hr>
+    
+    <footer>
+      <div class="container">
+        <p>&copy; Justin Scott 2014</p>
+      </div>
+    </footer>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/highlight.min.js"></script>
+    <script type="text/javascript">
+      hljs.initHighlightingOnLoad();
+    </script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40323936-2', 'auto');
+  ga('send', 'pageview');
+</script>
+  </body>
+</html>

@@ -1,16 +1,139 @@
-<script src="js/mvml/dependencies.js"></script>
-<script src="js/mvml/api.js"></script>
-<script src="js/mvml/load.js"></script>
-<mvml>
----
-title: JavaScript test
-player:
-  start: (0,0,20)
-  gravity: 0
-scene:
-- primitive: sphere
-  position: (0,4,0)
-  physics: false
-- light: directional
-  position: (1,1,1)
-</mvml>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="The homepage for the MVML framework">
+    <meta name="author" content="JScott">
+    <title> MVML </title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/core.css" rel="stylesheet">
+    <link href="css/info.css" rel="stylesheet">
+  </head>
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">MVML</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a>Home</a></li>
+            <li><a href="getting-started.html">Getting Started</a></li>
+            <li><a href="https://github.com/JScott/mvml">Github</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="jumbotron shaded">
+      <div class="container">
+        <div class="header text-center">
+          <h1>MetaVerse Markup Language</h1>
+          <p>
+            3D worlds for everyone!
+          </p>
+        </div>
+
+        <div class="hidden-xs row showcase">
+          <div class="pull-left">
+            <iframe src="example.mvml" class="img-thumbnail"></iframe>
+          </div>
+          <div class="pull-right">
+            <iframe src="example.html" class="img-rounded"></iframe>
+            <div class="iframe-overlay text-right">
+              Try me! Arrows to move, click to pan<br>
+            </div>
+          </div>
+        </div>
+
+        <div class="read-play visible-xs-block btn-group btn-group-lg btn-group-justified">
+          <a class="btn btn-default" href="example.mvml">Read it</a>
+          <a class="btn btn-primary" href="example.html">Play it</a>
+        </div>
+
+        <div class="subscribe">
+          <div class="col-md-3 col-sm-2"></div>
+          <div class="col-md-4 col-sm-5">
+            <a class="btn btn-primary btn-lg" href="getting-started.html">Start building</a>
+          </div>
+          <div class="col-md-2 col-sm-3">
+            <a class="btn btn-default btn-lg" href="example.html">Fullscreen</a>
+          </div>
+          <div class="col-md-3 col-sm-2"></div>
+        </div>
+      </div>
+    </div>
+    <section class="why-mvml">
+    <div class="container">
+      <h1>Why is MVML for me?</h1>
+      <p class="lead">
+        <a class="other-options" data-toggle="popover" data-placement="bottom">Many other frameworks</a>
+        provide one-off 3D web experiences and proprietary 3D browsers.
+        MVML specializes in helping you build and share a network of first-person worlds.
+      </p>
+      <div class="row">
+        <div class="col-md-4">
+          <h2>Portable</h2>
+          <ul>
+              <li>Renders in your favourite browser</li>
+              <li>Built with mobile in mind</li>
+          </ul>
+        </div>
+        <div class="col-md-4">
+          <h2>Accessible</h2>
+          <ul>
+            <li>Easy for non-technical artists to write</li>
+            <li>A consistent first-person experience</li>
+          </ul>
+       </div>
+        <div class="col-md-4">
+          <h2>Robust</h2>
+          <ul>
+            <li>Built on Open Source web dev libraries</li>
+            <li>Exposes JS for advanced scripting</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    </section>
+    <footer>
+      <div class="container">
+        <p>&copy; Justin Scott 2014</p>
+      </div>
+    </footer>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        var content = "<a href='http://janusvr.com/'>JanusVR</a><br>";
+        content += "<a href='http://secondlife.com/'>Second Life</a><br>";
+        content += "<a href='http://unity3d.com/'>Unity3D</a><br>";
+        content += "<a href='http://www.x3dom.org/'>X3DOM</a>";
+        $('a.other-options').popover({
+          html: true,
+          content: content
+        });
+      });
+    </script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-40323936-2', 'auto');
+  ga('send', 'pageview');
+</script>
+  </body>
+</html>

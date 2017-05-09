@@ -1,0 +1,48 @@
+---
+title: Hello MetaVerse!
+player:
+  start: (0,0,30)
+  gravity: 30
+skybox:
+  texture: img/space.jpg
+  color: 0x000077
+scene:
+- primitive: sphere
+  specular: yellow
+  shininess: 40
+
+- primitive: box
+  position: (0, 0, -20)
+  scale: (30,10,1)
+  color: 0x00ff00
+
+- primitive: box
+  position: (-10, 1, 0)
+  scale: (2,2,4)
+  rotation: (0,-30,0)
+  color: 0x00ffff
+  physics: off
+  
+- primitive: plane
+  position: (0,-2, 0)
+  scale: (200,200,1)
+  rotation: (-90,0,0)
+  texture: img/grass.jpg
+  specular: black
+  shininess: 0
+
+- mesh: models/invader.obj
+  position: (10,0,0)
+  scale: (0.05,  0.05, 0.05)
+  color: red
+  mass: 200
+  shininess: 10
+
+- light: point
+  position: (0, 2,10)
+  intensity: 0.5
+  distance: 40
+  color: white
+
+- light: ambient
+  color: 0x202020
